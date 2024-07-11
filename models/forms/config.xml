@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="config" addfieldpath="/administrator/components/com_tradingtechnologies/models/fields">
+        <field name="tt_app_key" type="text" label="COM_TT_CONFIG_APP_KEY" description="" default="" labelclass="uk-form-label" />
+        <field name="tt_app_secret" type="text" label="COM_TT_CONFIG_APP_SECRET" description="" default="" labelclass="uk-form-label" />
+        <field name="tt_environment" type="text" label="COM_TT_CONFIG_ENVIRONMENT" description="" default="" labelclass="uk-form-label" />
+        <field name="tt_company" type="text" label="COM_TT_CONFIG_COMPANY" description="" default="" labelclass="uk-form-label" />
+        <field name="debug" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_TT_CONFIG_DEBUG" description=""  labelclass="uk-form-label">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="logging" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_TT_CONFIG_LOGGING" description=""  labelclass="uk-form-label">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+	</fieldset>
+</form>

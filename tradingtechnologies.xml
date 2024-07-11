@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.9" method="upgrade">
+	<name>COM_TRADINGTECHNOLOGIES</name>
+	<author>Maik Künnemann</author>
+	<creationDate>August 2023</creationDate>
+	<copyright>Copyright (C) 2023 Maik Künnemann. All rights reserved</copyright>
+	<license>GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html</license>
+	<authorEmail>mail@thrive-on.net</authorEmail>
+	<authorUrl>www.thrive-on.net</authorUrl>
+	<version>1.0.0</version>
+	<description></description>
+	<scriptfile>script.tradingtechnologies.php</scriptfile>
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.sql</file>
+		</sql>
+	</install>
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
+		</sql>
+	</uninstall>
+	<update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
+
+	<files folder="site">
+		<filename>tradingtechnologies.php</filename>
+		<filename>controller.php</filename>
+		<filename>index.html</filename>
+		<folder>assets</folder>
+		<folder>controllers</folder>
+		<folder>helpers</folder>
+		<folder>models</folder>
+		<folder>views</folder>
+	</files>
+
+	<languages folder="site/language">
+		<language tag="en-GB">en-GB/en-GB.com_tradingtechnologies.ini</language>
+	</languages>
+	<administration>
+		<menu>COM_TT</menu>
+		<submenu>
+			<menu link="option=com_tradingtechnologies&amp;view=positions" view="positions" alt="tradingtechnologies/Positions">COM_TT_POSITIONS</menu>
+			<menu link="option=com_tradingtechnologies&amp;view=config" view="account" alt="tradingtechnologies/Config">COM_TT_CONFIG</menu>
+			<menu link="option=com_tradingtechnologies&amp;view=credentials" view="credentials" alt="tradingtechnologies/Accounts">COM_TT_CREDENTIALS</menu>
+			<menu link="option=com_tradingtechnologies&amp;view=transactions" view="transactions" alt="tradingtechnologies/Transactions">COM_TT_TRANSACTIONS</menu>
+			<menu link="option=com_tradingtechnologies&amp;view=portfolios_daily" view="portfolios_daily" alt="tradingtechnologies/Portfolios Daily">COM_TT_PORTFOLIOS_DAILY</menu>
+		</submenu>
+
+		<files folder="admin">
+			<filename>access.xml</filename>
+			<filename>config.xml</filename>
+			<filename>controller.php</filename>
+			<filename>index.html</filename>
+			<filename>tradingtechnologies.php</filename>
+			<folder>assets</folder>
+			<folder>controllers</folder>
+			<folder>helpers</folder>
+			<folder>libraries</folder>
+			<folder>models</folder>
+			<folder>sql</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+		</files>
+		<languages folder="admin/language">
+			<language tag="de-DE">de-DE/de-DE.com_tradingtechnologies.ini</language>
+			<language tag="de-DE">de-DE/de-DE.com_tradingtechnologies.sys.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_tradingtechnologies.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_tradingtechnologies.sys.ini</language>
+		</languages>
+
+	</administration>
+	
+	<fileset>
+        <files target="cli" folder="cli">
+            <file>tt_token.php</file>
+        </files>
+    </fileset>
+	
+</extension>

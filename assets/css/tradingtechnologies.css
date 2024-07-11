@@ -1,0 +1,7 @@
+.clear {
+	clear: both;
+}
+.icon-tt {
+	background: url('../images/icon_tt.png') no-repeat left;
+	background-size: cover;
+}
