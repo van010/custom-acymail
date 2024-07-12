@@ -2,6 +2,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Form\FormField;
 
 require_once JPATH_ROOT . '/plugins/system/vg_trading_tech/helper.php';
@@ -19,11 +20,13 @@ class JFormFieldSelectPositions extends FormField
 		$plgTradingParams = json_decode($plgTradingAttrs->params);
 	    $position_column_names = vgTradingTechHelper::getColumnNames('#__tt_positions');
 		$html = '<fieldset name="'.$this->name.'" id="jform_params_'.$fieldName.'" class="checkboxes">';
+		$html .= '<button class="btn-attrs-all" type="button" onclick="selectAllPositionAttrs(this, 1)">'.Text::_('PLG_VG_TRADING_TECH_SELECT_ALL_POSITION_ATTRS').'</button>';
+		$html .= '<button class="btn-attrs-none" type="button" onclick="selectAllPositionAttrs(this, 0)">'.Text::_('PLG_VG_TRADING_TECH_SELECT_NONE_POSITION_ATTRS').'</button><br>';
 		$html .= "<legend class='visually-hidden'></legend>";
 
 	    foreach ($position_column_names as $key => $colName)
 	    {
-            $checked = in_array($colName, $plgTradingParams->$fieldName) ? 'checked' : '';
+            $checked = !empty($plgTradingParams->$fieldName) && in_array($colName, $plgTradingParams->$fieldName) ? 'checked' : '';
 		    $html  .= '<div class="form-check form-check-inline">';
 		    $id    = "jform_params_" . $fieldName . $key;
 		    $name  = "jform[params][" . $fieldName . "][]";

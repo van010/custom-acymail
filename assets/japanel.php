@@ -22,7 +22,7 @@ class JFormFieldJapanel extends FormField
     {
         $doc = Factory::getDocument();
         // HTMLHelper::_('jquery.framework');
-	    $doc->addScript(Uri::root(true) . 'plugins/system/vg_trading_tech/assets/js/vg-trading-tech.js');
+	    $doc->addScript(Uri::root(true) . '/plugins/system/vg_trading_tech/assets/js/vg-trading-tech.js');
 	    $doc->addStyleSheet(Uri::root(true) . '/plugins/system/vg_trading_tech/assets/style/vg-trading-tech.css');
     }
 }

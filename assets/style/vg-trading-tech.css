@@ -1,0 +1,26 @@
+.btn-attrs-all, .btn-attrs-none {
+    background-color: #009879;
+	border: none;
+	color: white;
+    margin-left: 2px;
+	padding: 4px 8px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 1rem;
+	cursor: pointer;
+	border-radius: .2rem;
+	transition: background-color 0.3s ease;
+}
+
+.btn-attrs-all:hover {
+    background-color: #007a63;
+}
+
+.btn-attrs-none {
+    background-color: #e81717;
+}
+
+.btn-attrs-none:hover {
+    background-color: #c71010;
+}
