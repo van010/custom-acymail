@@ -1,0 +1,1 @@
+Custom trading position for acymailing template 
