@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="1.0" type="plugin" group="system" method="upgrade">
+	<name>PLG_VG_TRADING_TECH_NAME</name>
+	<author>Vangogh</author>
+	<creationDate>July 11th, 2024</creationDate>
+	<authorEmail>van.vanbac010@gmail.com</authorEmail>
+	<authorUrl>www.linkedin.com/in/van-hs-0a00511b2</authorUrl>
+	<version>1.0.0</version>
+	<description>Do some custom tasks for Trading Technologies component</description>
+	<files>
+		<filename plugin="vg_trading_tech">vg_trading_tech.php</filename>
+		<filename>helper.php</filename>
+		<folder>assets</folder>
+		<folder>layouts</folder>
+		<folder>adapters</folder>
+		<folder>languages</folder>
+	</files>
+
+	<languages>
+		<language tag="en-GB">languages/en-GB/en-GB.plg_system_vg_trading_tech.ini</language>
+		<language tag="en-GB">languages/en-GB/en-GB.plg_system_vg_trading_tech.sys.ini</language>
+	</languages>
+
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="test" type="text" label="test"/>
+				<field
+					addfieldpath="/plugins/systems/vg_trading_tech/layouts/fields/com_tradingtech"
+					name="load_positions"
+					type="loadpositions"
+					label="PLG_VG_TRADING_TECH_POSITIONS_SAMPLE_MAIL">
+				</field>
+			</fieldset>
+			<!--<fieldset name="config_trading_positions" addfieldpath="/plugins/systems/vg_trading_tech/layouts/fields/com_tradingtech">
+				<field name="select_positions" type="selectPositions" label="PLG_VG_TRADING_TECH_SELECT_POSITION_FIELDS"/>
+			</fieldset>
+			<fieldset nam="config_acym_mail_templates" addfieldpath="/plugins/systems/vg_trading_tech/layouts/fields/com_acym">
+				<field name="mail_preview" type="mailPreview" label="PLG_VG_TRADING_TECH_MAIL_PREVIEW"/>
+			</fieldset>-->
+		</fields>
+	</config>
+</extension>
