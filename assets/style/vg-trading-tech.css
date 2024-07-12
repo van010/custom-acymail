@@ -24,3 +24,28 @@
 .btn-attrs-none:hover {
     background-color: #c71010;
 }
+
+#tt-position-lists {
+	font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tt-position-lists td, #tt-position-lists th {
+	border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+#tt-position-lists tr:nth-child(even) {
+	background-color: #dddddd;
+}
+
+#tt-position-lists tr:hover {
+	background-color: #efe8e8;
+}
+
+#tab_plgacymtradingpositions_0 {
+	overflow: auto;
+	width: 100%;
+}

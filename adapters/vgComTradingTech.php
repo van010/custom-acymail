@@ -24,8 +24,7 @@ class vgComTradingTech
 		$start = 20;
 		$query = $db->getQuery(true);
         // $columns = ['`id`', '`portfolio_id`', '`accountId`', '`open`', '`closed`', '`openAvgPrice`', '`pnlPrice`', '`pnlPriceType`', '`date`'];
-        $columns = vgTradingTechHelper::getPlgTradingAttrs();
-//		echo '<pre style="color: red">';print_r($columns);echo '</pre>';die;
+        $columns = vgTradingTechHelper::getTradingPositionAttrs();
 		$query->select($columns)
 			->from(self::$tbl_tt_positions)
 			->order('date DESC')

@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function (){
-
+    vgTradingInit();
 })
 
 function selectAllPositionAttrs(element, task){
@@ -15,3 +15,11 @@ function selectAllPositionAttrs(element, task){
     });
 }
 
+function changePosition(tagName, element){
+    console.log(tagName);
+}
+
+function vgTradingInit(){
+    const trading_data_label = document.getElementById('jform_params_load_positions-lbl');
+    trading_data_label.parentElement.remove();
+}

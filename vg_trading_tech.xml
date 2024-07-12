@@ -24,12 +24,11 @@
 	<config>
 		<fields name="params" addfieldpath="/plugins/system/vg_trading_tech/layouts/fields">
 			<fieldset name="basic">
-				<field name="test" type="text" label="test"/>
 				<field
 					name="load_positions"
 					id="load-positions"
 					type="loadPositions"
-					label="PLG_VG_TRADING_TECH_POSITIONS_SAMPLE_MAIL"
+					label="PLG_VG_TRADING_TECH_POSITIONS_SELECT_ROW"
 					addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_tradingtech"
 				>
 				</field>

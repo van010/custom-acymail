@@ -14,7 +14,8 @@ class vgTradingTechHelper
 
 	public static function getTradingPositionAttrs()
 	{
-		return json_decode(self::getPlgTradingAttrs()->select_positions);
+		$allParams = self::getPlgTradingAttrs()->params;
+		return json_decode($allParams)->select_positions;
 	}
 
 	public static function getPlgTradingAttrs()

@@ -1,0 +1,6 @@
+1. In main view: plugin
+- show selection box for acym template,
+	let user can choose id:
+		+ show mail content
+		+ show mail preview.
+- Toggle status, access,...
