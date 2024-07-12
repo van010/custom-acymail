@@ -22,22 +22,30 @@
 	</languages>
 
 	<config>
-		<fields name="params">
+		<fields name="params" addfieldpath="/plugins/system/vg_trading_tech/layouts/fields">
 			<fieldset name="basic">
 				<field name="test" type="text" label="test"/>
 				<field
-					addfieldpath="/plugins/systems/vg_trading_tech/layouts/fields/com_tradingtech"
 					name="load_positions"
-					type="loadpositions"
-					label="PLG_VG_TRADING_TECH_POSITIONS_SAMPLE_MAIL">
+					id="load-positions"
+					type="loadPositions"
+					label="PLG_VG_TRADING_TECH_POSITIONS_SAMPLE_MAIL"
+					addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_tradingtech"
+				>
 				</field>
 			</fieldset>
-			<!--<fieldset name="config_trading_positions" addfieldpath="/plugins/systems/vg_trading_tech/layouts/fields/com_tradingtech">
+
+			<fieldset addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_tradingtech"
+					  name="config_trading_positions"
+					  label="PLG_VG_TRADING_TECH_CONFIG_POSITIONS_NAME">
 				<field name="select_positions" type="selectPositions" label="PLG_VG_TRADING_TECH_SELECT_POSITION_FIELDS"/>
 			</fieldset>
-			<fieldset nam="config_acym_mail_templates" addfieldpath="/plugins/systems/vg_trading_tech/layouts/fields/com_acym">
+
+			<fieldset addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_acym"
+					  name="config_acym_mail_templates"
+					  label="PLG_VG_TRADING_TECH_ACYM_MAIL_CONFIGS">
 				<field name="mail_preview" type="mailPreview" label="PLG_VG_TRADING_TECH_MAIL_PREVIEW"/>
-			</fieldset>-->
+			</fieldset>
 		</fields>
 	</config>
 </extension>
