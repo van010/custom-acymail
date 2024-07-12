@@ -33,6 +33,7 @@
 					addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_tradingtech"
 				>
 				</field>
+				<field name="japanel" type="japanel" hidden="true" addfieldpath="/plugins/system/vg_trading_tech/assets/"/>
 			</fieldset>
 
 			<fieldset addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_tradingtech"
@@ -44,7 +45,7 @@
 			<fieldset addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_acym"
 					  name="config_acym_mail_templates"
 					  label="PLG_VG_TRADING_TECH_ACYM_MAIL_CONFIGS">
-				<field name="mail_preview" type="mailPreview" label="PLG_VG_TRADING_TECH_MAIL_PREVIEW"/>
+				<field name="mail_preview" type="acymMailPreview" label="PLG_VG_TRADING_TECH_MAIL_PREVIEW"/>
 			</fieldset>
 		</fields>
 	</config>
