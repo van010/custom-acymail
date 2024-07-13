@@ -36,7 +36,9 @@ class JFormFieldLoadPositions extends FormField
 		if (empty($positions)) {
 		    return '';
 		}
-	    $html = '<table id="tt-position-lists">';
+        $html = '';
+        $html .= $this->htmlSearchPosition();
+	    $html .= '<table id="tt-position-lists">';
 		$columnNames = array_keys($positions[0]);
 		$html .= '<tr class="tt-column-names">';
         foreach ($columnNames as $columnName) {
@@ -55,6 +57,17 @@ class JFormFieldLoadPositions extends FormField
 	        $html .= "</tr>";
 		}
 		$html .= '</table>';
+		return $html;
+	}
+
+	public function htmlSearchPosition()
+	{
+		$searchText = Text::_('PLG_VG_TRADING_TECH_POSITION_SEARCH');
+		$searchPlaceholderText = Text::_('PLG_VG_TRADING_TECH_POSITION_SEARCH_PLACEHOLDER');
+		$html = "<div class='vg-position-search-container'>";
+        $html .= "<input type='text' onchange='triggerSearchPosition(this)' onclick='triggerSearchPosition(this)' placeholder='$searchPlaceholderText'>";
+		$html .= "<button type='button'>$searchText</button>";
+		$html .= "</div>";
 		return $html;
 	}
 

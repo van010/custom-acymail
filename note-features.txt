@@ -3,4 +3,13 @@
 	let user can choose id:
 		+ show mail content
 		+ show mail preview.
+
 - Toggle status, access,...
+
+- trading positions implement:
+	+ search by id: reference clinpin3x
+	+ sort by date, id, price, v.v
+
+- choose any position row, insert directly into acym template
+
+- click to send this template mail for a list with multiple receivers.

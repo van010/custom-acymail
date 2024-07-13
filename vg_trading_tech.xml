@@ -32,6 +32,12 @@
 					addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_tradingtech"
 				>
 				</field>
+				<field name="load_acym_mail_templates"
+					   id="load-acym-mail-templates"
+					   type="loadAcymMailTemplates"
+					   label="PLG_VG_TRADING_TECH_ACYM_MAIL_SELECT_TEMPLATE"
+					   addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_acym">
+				</field>
 				<field name="japanel" type="japanel" hidden="true" addfieldpath="/plugins/system/vg_trading_tech/assets/"/>
 			</fieldset>
 

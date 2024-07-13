@@ -23,3 +23,7 @@ function vgTradingInit(){
     const trading_data_label = document.getElementById('jform_params_load_positions-lbl');
     trading_data_label.parentElement.remove();
 }
+
+function triggerSearchPosition(element){
+    console.log(element.value);
+}
