@@ -44,6 +44,7 @@
 			<fieldset addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_tradingtech"
 					  name="config_trading_positions"
 					  label="PLG_VG_TRADING_TECH_CONFIG_POSITIONS_NAME">
+				<field name="limit_positions" type="text" label="PLG_VG_TRADING_TECH_LIMIT_POSITION"/>
 				<field name="select_positions" type="selectPositions" label="PLG_VG_TRADING_TECH_SELECT_POSITION_FIELDS"/>
 			</fieldset>
 

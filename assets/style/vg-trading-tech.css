@@ -1,8 +1,8 @@
 .btn-attrs-all, .btn-attrs-none {
-    background-color: #009879;
+	background-color: #009879;
 	border: none;
 	color: white;
-    margin-left: 2px;
+	margin-left: 2px;
 	padding: 4px 8px;
 	text-align: center;
 	text-decoration: none;
@@ -53,14 +53,14 @@
 .vg-position-search-container {
 	display: flex;
 	/*justify-content: center;*/
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 
 .vg-position-search-container input[type="text"] {
 	padding: 10px;
 	width: 300px;
 	border: 1px solid #ccc;
-	border-radius: 5px 0 0 5px;
+	/*border-radius: 5px 0 0 5px;*/
 	outline: none;
 }
 
@@ -70,10 +70,59 @@
 	background-color: #007bff;
 	color: white;
 	cursor: pointer;
-	border-radius: 0 5px 5px 0;
+	/*border-radius: 0 5px 5px 0;*/
 }
 
 .vg-position-search-container button:hover {
 	background-color: #0056b3;
 }
 
+.vg-position-pagination {
+	display: flex;
+	justify-content: center;
+	list-style-type: none;
+	padding: 10px;
+	margin: 0;
+}
+
+.vg-position-pagination li {
+	margin: 0 2px;
+}
+
+.vg-position-pagination a {
+	display: block;
+	padding: 10px 15px;
+	color: #007bff;
+	text-decoration: none;
+	border: 1px solid #ccc;
+	/*border-radius: 5px;*/
+	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s;
+}
+
+.vg-position-pagination-dot a {
+	display: block;
+	color: red;
+}
+
+.vg-position-pagination a:hover {
+	background-color: #007bff;
+	color: white; !important;
+}
+
+.vg-position-pagination .active a {
+	background-color: #007bff;
+	color: white;
+	border-color: #007bff;
+}
+
+.vg-position-pagination .vg-position-pagination-dot a {
+	background-color: transparent;
+	color: #333;
+	border: none;
+}
+
+.vg-position-pagination .vg-position-pagination-dot a:hover {
+	background-color: transparent;
+	color: #333;
+}
