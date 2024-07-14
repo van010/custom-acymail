@@ -126,3 +126,25 @@
 	background-color: transparent;
 	color: #333;
 }
+
+.table-overlay {
+	position: absolute;
+	background-color: #dcdcdc;
+	opacity: .5;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 1px;
+}
+
+#vg-trading-executing {
+	display: none;
+	/*position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	justify-content: center;*/
+
+}

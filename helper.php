@@ -12,6 +12,15 @@ class vgTradingTechHelper
 		// todo
 	}
 
+	public static function getParams($key)
+	{
+		$allParams = self::getPlgTradingAttrs()->params;
+		if (empty($key)) {
+		    return $allParams;
+		}
+		return json_decode($allParams)->$key;
+	}
+
 	public static function getTradingPositionAttrs()
 	{
 		$allParams = self::getPlgTradingAttrs()->params;

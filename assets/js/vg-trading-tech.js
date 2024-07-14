@@ -40,8 +40,10 @@ async function loadPage(pageNumber, element){
         }
     });
     element.classList.add('active');
+    showLoading();
     // load
     const formData = new FormData();
+    formData.append('vgTask', 'pagination');
     formData.append('pageNum', pageNumber);
     try{
         const response = await fetch(joomlaApi, {
@@ -49,11 +51,37 @@ async function loadPage(pageNumber, element){
             body: formData,
         });
         const rawData = await response.json();
-        console.log(rawData);
+        if (!rawData.success) {
+            return ;
+        }
+        const data = rawData.data[0];
+        reloadDataTblTrading(data.data.html);
+        console.log(data);
+        hideLoading();
     }catch(error){
         console.log(error);
     }
     // complete ajax load data for page
     // then load acymailing templates
     // insert data from trading table to this form
+}
+
+function showLoading(element){
+    const tblOverlay = document.createElement('div');
+	const tblTrading = document.getElementById('tt-position-lists');
+	tblOverlay.classList.add('table-overlay');
+	tblOverlay.style.display = 'block';
+	tblTrading.insertAdjacentElement('afterend', tblOverlay);
+}
+
+function hideLoading(){
+    const tblOverlay = document.querySelector('div.table-overlay');
+    // tblOverlay.style.display = 'block';
+    tblOverlay.remove();
+}
+
+function reloadDataTblTrading(htmlData){
+    const tbl_trading_wrapper = document.getElementById('tbl-trading-data');
+    tbl_trading_wrapper.querySelector('table').remove();
+    tbl_trading_wrapper.innerHTML = htmlData;
 }

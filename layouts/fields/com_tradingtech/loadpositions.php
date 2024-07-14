@@ -2,6 +2,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
@@ -20,51 +21,18 @@ class JFormFieldLoadPositions extends FormField
     {
         $html = "<h1>".Text::_('PLG_VG_TRADING_TECH_LOAD_POSITION_LABEL')."</h1>";
         $html .= '';
-		$positions = vgComTradingTech::loadPositions(false);
-		$html .= $this->showTableData($positions);
+		$app = Factory::getApplication();
+		$input = $app->input;
+		$tradingPageId = $input->getInt('page', 0);
+		// $positions = vgComTradingTech::loadPositions(false);
+        $html .= $this->htmlSearchPosition();
+	    // $html .= vgComTradingTech::showTableData($positions);
+	    $html .= '<div id="tbl-trading-data">';
+	    $html .= vgComTradingTech::handlePagination([], $tradingPageId)['data']['html'];
+        $html .= '</div>';
+	    $html .= $this->paginationTradingPositions();
         return $html;
     }
-
-	/**
-	 * @param $positions
-	 *
-	 * @return string
-	 *
-	 * @since version
-	 */
-	public function showTableData($positions)
-    {
-		if (empty($positions)) {
-		    return '';
-		}
-		$idxText = Text::_('PLG_VG_TRADING_TECH_POSITION_INDEX');
-        $html = '';
-        $html .= $this->htmlSearchPosition();
-	    $html .= '<table id="tt-position-lists">';
-		$columnNames = array_keys($positions[0]);
-		$html .= '<tr class="tt-column-names">';
-        $html .= "<th class='tt-name-idx'>$idxText</th>";
-        foreach ($columnNames as $columnName) {
-			$colum = ucfirst(str_replace('_', ' ', $columnName));
-			$html .= "<th class='tt-name-$columnName'>$colum</th>";
-		}
-		$html .= '</tr>';
-
-        foreach ($positions as $key => $position) {
-            $key += 1;
-            $positionId = $position['id'];
-            $tagName = "{positionId:$positionId}";
-	        $html .= "<tr style='cursor:pointer' onclick='changePosition($tagName, jQuery(this))'>";
-			$html .= "<td>$key</td>";
-            foreach ($position as $item) {
-	            $html .= "<td>$item</td>";
-			}
-	        $html .= "</tr>";
-		}
-		$html .= '</table>';
-        $html .= $this->paginationTradingPositions();
-		return $html;
-	}
 
 	public function htmlSearchPosition()
 	{
@@ -79,7 +47,8 @@ class JFormFieldLoadPositions extends FormField
 
 	public function paginationTradingPositions()
 	{
-        $totalPositions = vgComTradingTech::loadPositions(true);
+		$pageLimit = vgTradingTechHelper::getParams('limit_positions');
+        $totalPositions = round(vgComTradingTech::loadPositions(true) / $pageLimit);
         $html = '<ul class="vg-position-pagination">';
         $html .= '<li class="pag-prev"><a href="#">&laquo;</a></li>';
 		for ($i=0; $i<$totalPositions; $i++)

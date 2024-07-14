@@ -13,3 +13,8 @@
 - choose any position row, insert directly into acym template
 
 - click to send this template mail for a list with multiple receivers.
+
+// complete ajax load data for page
+    // then load acymailing templates
+    // insert data from trading table to this form
+    - fix load total page
