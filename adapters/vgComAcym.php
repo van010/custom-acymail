@@ -49,7 +49,7 @@ class vgComAcym
 		$db = Factory::getDbo();
 
         $db->setQuery("select `id`, `name`, `body` from #__acym_mail where `type` = 'template'");
-        $templates = $db->loadObjectList();
+        $templates = $db->loadObjectList('id');
 
 		$db->setQuery("select template_id from #__tt_mail_template");
         $openTemplate = $db->loadResult();

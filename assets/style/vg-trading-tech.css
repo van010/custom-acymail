@@ -209,3 +209,24 @@
 .msg-fail {
 	color: #dc3545;
 }
+
+.open-mail-preview, .close-mail-preview {
+	padding-top: 5px;
+}
+
+.open-mail-preview table.body, .close-mail-preview table.body{
+	width: 100%;
+}
+
+/*
+.open-mail-preview #acym__wysid__template, .close-mail-preview #acym__wysid__template {
+	height: 50%;
+}*/
+
+.vg-show {
+	display: block;
+}
+
+.vg-hide {
+	display: none;
+}

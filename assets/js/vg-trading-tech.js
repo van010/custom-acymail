@@ -34,6 +34,36 @@ function triggerSearchPosition(element){
 
 function triggerUpdateTtSignalMail(el, mailId){
     const openMailField = document.getElementById(`for-${el.id}`);
+    const closeMailPreview = document.getElementById(`close-mail-${mailId}`);
+    const openMailPreview = document.getElementById(`open-mail-${mailId}`);
+    var allMailId = el.getAttribute('data-id');
+    let task = 'close';
+    if (el.id.includes('-open')) {
+        task = 'open';
+    }
+    allMailId = JSON.parse(allMailId);
+    allMailId = allMailId.filter(function(number){
+        return number != mailId;
+    })
+
+    if (task === 'close') {
+        closeMailPreview.style.display = 'block';
+    } else {
+		openMailPreview.style.display = 'block';
+	}
+    for (let i=0; i<allMailId.length; i++) {
+
+        if (task === 'close') {
+            var closePreview = document.getElementById(`close-mail-${allMailId[i]}`);
+            if (!closePreview) return;
+            closePreview.style.display = 'none';
+        }
+        if (task === 'open') {
+            var openPreview = document.getElementById(`open-mail-${allMailId[i]}`);
+            if (!openPreview) return;
+            openPreview.style.display = 'none';
+        }
+    }
     openMailField.value = mailId;
 }
 
