@@ -148,3 +148,52 @@
 	justify-content: center;*/
 
 }
+
+.trading-mail-config {
+    background-color: #f8f9fa;
+    padding: 20px;
+	border-radius: 1px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+.trading-mail-config div {
+    margin-bottom: 15px;
+}
+
+.trading-mail-config span {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.trading-mail-config select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.trading-mail-config select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 1px;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
