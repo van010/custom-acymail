@@ -14,6 +14,20 @@ class PlgSystemVg_trading_tech extends CMSPlugin
         // todo
     }
 
+	public function onContentPrepareForm($form, $data){
+		// todo
+	}
+
+    public function onExtensionBeforeSave($context, $tbl, $is_new)
+    {
+        // todo
+    }
+
+    public static function onExtensionAfterSave($context, $tbl, $is_new)
+    {
+
+	}
+
     public function onAjaxVg_trading_tech()
     {
         $app = Factory::getApplication();
@@ -21,7 +35,7 @@ class PlgSystemVg_trading_tech extends CMSPlugin
         if (!$user->id) return ;
 
         $input = $app->input;
-        $task = $input->get('vgTask', '');
+        $task = $input->get('task', '');
         $pageNum = $input->getInt('pageNum', 0);
 		$res = [
 			'message' => '',

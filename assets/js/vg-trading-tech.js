@@ -43,7 +43,7 @@ async function loadPage(pageNumber, element){
     showLoading();
     // load
     const formData = new FormData();
-    formData.append('vgTask', 'pagination');
+    formData.append('task', 'pagination');
     formData.append('pageNum', pageNumber);
     try{
         const response = await fetch(joomlaApi, {

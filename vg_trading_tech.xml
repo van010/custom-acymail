@@ -32,9 +32,9 @@
 					addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_tradingtech"
 				>
 				</field>
-				<field name="load_acym_mail_templates"
-					   id="load-acym-mail-templates"
-					   type="loadAcymMailTemplates"
+				<field name="preview_acym_mail_templates"
+					   id="preview-acym-mail-templates"
+					   type="acymMailPreview"
 					   label="PLG_VG_TRADING_TECH_ACYM_MAIL_SELECT_TEMPLATE"
 					   addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_acym">
 				</field>
@@ -51,7 +51,9 @@
 			<fieldset addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_acym"
 					  name="config_acym_mail_templates"
 					  label="PLG_VG_TRADING_TECH_ACYM_MAIL_CONFIGS">
-				<field name="mail_preview" type="acymMailPreview" label="PLG_VG_TRADING_TECH_MAIL_PREVIEW"/>
+				<field name="load_acym_mail"
+					   type="loadAcymMailTemplates"
+					   label="PLG_VG_TRADING_TECH_MAIL_PREVIEW"/>
 			</fieldset>
 		</fields>
 	</config>
