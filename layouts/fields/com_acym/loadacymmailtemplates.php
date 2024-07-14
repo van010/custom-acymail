@@ -39,7 +39,8 @@ class JFormFieldLoadacymmailtemplates extends FormField
         $html = '<div class="trading-mail-config">';
         $html .= $this->tradingOpenMail($allMails, $id, $field_select_name);
         $html .= $this->tradingCloseMail($allMails, $id, $field_select_name);
-        $html .= "<button type='button' class='btn btn-primary mb-2'>$btnSaveText</button>";
+        $html .= "<button type='button' onclick='updateTtSignalMail()' class='btn btn-primary mb-2'>$btnSaveText</button>";
+        $html .= "<p class='update-mail-msg'></p>";
 		$html .= '</div>';
 
         return $html;
@@ -53,19 +54,21 @@ class JFormFieldLoadacymmailtemplates extends FormField
      */
     public function tradingOpenMail($allMails, $id, $field_select_name)
     {
+		$openMailId = $allMails['tt_open_mail_id'];
 		$openText = Text::_('PLG_VG_TRADING_TECH_ACYM_SELECT_OPEN_MAIL');
 	    $htmlOpen = '<div class="trading-open-mail">';
 		$htmlOpen .= "<span>$openText</span>";
-        $htmlOpen .= "<select id='$id-open' name='$field_select_name-open' class='form-select required' required>";
+        $htmlOpen .= "<select onchange='triggerUpdateTtSignalMail(this, value)' id='$id-open' name='$field_select_name-open' class='form-select required' required>";
         // $htmlOpen .= "<option value=''>Please Select Open Mail Templates</option>";
 	    foreach ($allMails['acym_templates'] as $acymTemplate)
 	    {
             $acymTemplateId = $acymTemplate->id;
             $acymTemplateName = $acymTemplate->name;
-			$selected = $allMails['tt_open_mail_id'] === $acymTemplateId ? 'selected' : '';
+			$selected = $openMailId === $acymTemplateId ? 'selected' : '';
             $htmlOpen .= "<option value='$acymTemplateId' $selected>$acymTemplateName - $acymTemplateId</option>";
         }
         $htmlOpen .= "</select>";
+		$htmlOpen .= "<input id='for-jform_params_load_acym_mail-open' value='$openMailId' hidden>";
 		$htmlOpen .= "</div>";
 		return $htmlOpen;
 	}
@@ -78,18 +81,20 @@ class JFormFieldLoadacymmailtemplates extends FormField
      */
     public function tradingCloseMail($allMails, $id, $field_select_name)
     {
+		$closeMailId = $allMails['tt_close_mail_id'];
 		$closeText = Text::_('PLG_VG_TRADING_TECH_ACYM_SELECT_CLOSE_MAIL');
 		$htmlClose = "<div class='trading-close-mail'>";
 		$htmlClose .= "<span>$closeText</span>";
-	    $htmlClose .= "<select id='$id-close' name='$field_select_name-close' class='form-select required' required>";
+	    $htmlClose .= "<select onchange='triggerUpdateTtSignalMail(this, value)' id='$id-close' name='$field_select_name-close' class='form-select required' required>";
         foreach ($allMails['acym_templates'] as $acymTemplate)
 	    {
             $acymTemplateId = $acymTemplate->id;
             $acymTemplateName = $acymTemplate->name;
-			$selected = $allMails['tt_close_mail_id'] === $acymTemplateId ? 'selected' : '';
+			$selected = $closeMailId === $acymTemplateId ? 'selected' : '';
             $htmlClose .= "<option value='$acymTemplateId' $selected>$acymTemplateName - $acymTemplateId</option>";
         }
         $htmlClose .= "</select>";
+		$htmlClose .= "<input id='for-jform_params_load_acym_mail-close' value='$closeMailId' hidden>";
 		$htmlClose .= "</div>";
 		return $htmlClose;
 	}

@@ -197,3 +197,15 @@
     background-color: #0056b3;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.update-mail-msg {
+	display: none;
+}
+
+.msg-success {
+	color: #198754;
+}
+
+.msg-fail {
+	color: #dc3545;
+}

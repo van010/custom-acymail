@@ -11,6 +11,33 @@ class vgComAcym
 		// todo
 	}
 
+    /**
+     * @param array $res
+     * @param object $mailIds
+     * @return mixed
+     */
+    public static function updateTtSignalMail($res, $mailIds)
+    {
+	    $db = Factory::getDbo();
+	    $query = $db->getQuery(true);
+		$fields = [
+			'`template_id` = ' . $db->quote($mailIds->openMailId),
+			'`template2_id` = ' . $db->quote($mailIds->closeMailId)
+		];
+		$query->update('`#__tt_mail_template`')
+			->set($fields)
+			->where('`id` = 1');
+		$db->setQuery($query);
+		if ($db->execute()) {
+			$res['message'] .= 'Update signal mail success!';
+			return $res;
+		}
+		$res['message'] .= 'Update signal mail failed!';
+		$res['code'] = 201;
+		$res['success'] = false;
+		return $res;
+    }
+
 	/**
 	 *
 	 * @return array

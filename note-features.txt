@@ -14,7 +14,7 @@
 
 - click to send this template mail for a list with multiple receivers.
 
-// complete ajax load data for page
-    // then load acymailing templates
+✔ complete ajax load data for page
+    Start loading acymailing templates
     // insert data from trading table to this form
     - fix load total page

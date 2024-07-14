@@ -5,6 +5,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 
+require_once JPATH_ROOT . '/plugins/system/vg_trading_tech/adapters/vgComAcym.php';
 require_once JPATH_ROOT . '/plugins/system/vg_trading_tech/adapters/vgComTradingTech.php';
 
 class PlgSystemVg_trading_tech extends CMSPlugin
@@ -36,18 +37,22 @@ class PlgSystemVg_trading_tech extends CMSPlugin
 
         $input = $app->input;
         $task = $input->get('task', '');
-        $pageNum = $input->getInt('pageNum', 0);
 		$res = [
 			'message' => '',
-			'code' => 404,
-			'success' => false
+			'code' => 200,
+			'success' => true
 		];
         switch ($task) {
             case 'pagination':
+                $pageNum = $input->getInt('pageNum', 0);
                 $res = vgComTradingTech::handlePagination($res, $pageNum);
                 break;
             case 'searchPosition':
                 vgComTradingTech::searchPosition('');
+                break;
+            case 'updateTtSignalMail':
+				$mailIds = $input->get('mailIds', [], 'RAW');
+                $res = vgComAcym::updateTtSignalMail($res, json_decode($mailIds));
                 break;
             case '':
             default:
