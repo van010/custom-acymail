@@ -25,7 +25,9 @@ function changePosition(tagName, element){
 
 function vgTradingInit(){
     const trading_data_label = document.getElementById('jform_params_load_positions-lbl');
+    const acymTemplatePreview = document.getElementById('jform_params_preview_acym_mail_templates-lbl');
     trading_data_label.parentElement.remove();
+    acymTemplatePreview.parentElement.remove();
 }
 
 function triggerSearchPosition(element){

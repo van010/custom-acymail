@@ -14,7 +14,17 @@
 
 - click to send this template mail for a list with multiple receivers.
 
+✔- fix load total page
+
 ✔ complete ajax load data for page
     Start loading acymailing templates
-    // insert data from trading table to this form
-    - fix load total page
+        ✔+ show selection mail templates
+            - ajx embed selected mail content into editor
+        + let user can load mail content into joomla editor
+            -> save button
+            - directly send mail into list of Users in user tab
+        + insert data from trading table to this form
+
+feature:
+	+ User selection check to send mail
+	+ exclude position fields when sending mail
