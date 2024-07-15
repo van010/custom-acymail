@@ -33,13 +33,15 @@ class vgComTradingTech
         $textSelectNone = Text::_('PLG_VG_TRADING_TECH_SELECT_NONE_POSITION_ATTRS');
         $plgTradingAttrs = vgTradingTechHelper::getPlgTradingAttrs();
         $plgTradingParams = json_decode($plgTradingAttrs->params);
-        $position_column_names = vgTradingTechHelper::getColumnNames('#__tt_positions');
+        $position_column_names = vgTradingTechHelper::getTradingPositionsColumnNames(true);
+		$instrument_column_names = vgTradingTechHelper::getInstrumentColumnNames(true);
+		$allColumns = array_merge($position_column_names, $instrument_column_names);
         $html = "<fieldset name='$name' id='$fieldsetId' class='checkboxes'>";
 		$html .= "<button class='btn-attrs-all' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 1)'>$textSelectAll</button>";
 		$html .= "<button class='btn-attrs-none' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 0)'>$textSelectNone</button><br>";
 		$html .= "<legend class='visually-hidden'></legend>";
 
-	    foreach ($position_column_names as $key => $colName)
+	    foreach ($allColumns as $key => $colName)
 	    {
             $checked = !empty($plgTradingParams->$fieldName) && in_array($colName, $plgTradingParams->$fieldName) ? 'checked' : '';
 		    $html  .= '<div class="form-check form-check-inline">';
@@ -86,8 +88,9 @@ class vgComTradingTech
 
         foreach ($positions as $key => $position) {
             $key += 1;
-            $positionId = $position['id'];
+            // $positionId = $position['id'];
             $tagName = json_encode($position);
+            $mappingKeys = self::mappingPositionsKey($position);
             // $tagName = "{positionId:$positionId}";
 	        $html .= "<tr style='cursor:pointer' onclick='changePosition($tagName, jQuery(this))'>";
 			$html .= "<td>$key</td>";
@@ -111,10 +114,14 @@ class vgComTradingTech
         $limitPositions = $plgParams->limit_positions;
 		$db = Factory::getDbo();
         $query = $db->getQuery(true);
-        $columns = vgTradingTechHelper::getTradingPositionAttrs();
+        // $columns = vgTradingTechHelper::getTradingPositionAttrs();
+        $allColumns = vgTradingTechHelper::getAllAssocTradingColumns();
+        $columns = [$allColumns['tt_positions_str'] . ', ' .$allColumns['tt_instruments_str']];
+//        echo '<pre style="color: red">';print_r($columns);echo '</pre>';die;
 		$query->select($columns)
-			->from('`#__tt_positions`')
-			->order('date DESC')
+			->from('`#__tt_positions` AS pos')
+            ->join('INNER', '`#__tt_instruments` AS ins ON ins.id = pos.instrumentId')
+			->order('pos.date DESC')
 			->setLimit($limitPositions, $pageNum * $limitPositions);
 		$db->setQuery($query);
 	    $res['code'] = 200;
@@ -138,14 +145,17 @@ class vgComTradingTech
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         // $columns = ['`id`', '`portfolio_id`', '`accountId`', '`open`', '`closed`', '`openAvgPrice`', '`pnlPrice`', '`pnlPriceType`', '`date`'];
-        $columns = vgTradingTechHelper::getTradingPositionAttrs();
+        // $columns = vgTradingTechHelper::getTradingPositionAttrs();
+        $allColumns = vgTradingTechHelper::getAllAssocTradingColumns();
+        $columns = [$allColumns['tt_positions_str'] . ', ' .$allColumns['tt_instruments_str']];
 		if ($countTotal) {
 		    $query->select('COUNT("id")');
 		} else {
 			$query->select($columns);
 		}
-		$query->from(self::$tbl_tt_positions)
-			->order('date DESC');
+		$query->from('`#__tt_positions` AS pos')
+            ->join('INNER', '#__tt_instruments AS ins ON ins.id = pos.instrumentId')
+			->order('pos.date DESC');
 		if (!$countTotal) {
 			$query->setLimit($limitPositions, $start);
 		}
@@ -156,6 +166,39 @@ class vgComTradingTech
 		}
         return $db->loadAssoclist();
 	}
+
+    public static function mappingPositionsKey($data)
+    {
+        $mapKeys = [
+            'portfolio_id' => 'Portfolio ID',
+            'accountId' => 'Account ID',
+            'instrumentId' => 'Instrument ID',
+            'avgBuy' => 'Average Buy',
+            'avgSell' => 'Average Sell',
+            'buyFillQty' => 'Buy Fill Quantity',
+            'buyWorkingQty' => 'Buy Working Quantity',
+            'netPosition' => 'Net Position',
+            'openAvgPrice' => 'Open Average Price',
+            'pln' => 'PLN',
+            'pnlPrice' => 'PLN Price',
+            'pnlPriceType' => 'PLN Price Type',
+            'realizedPnl' => 'Realized PNL',
+            'sellFillQty' => 'Sell Fill Quantity',
+            'sellWorkingQty' => 'Sell Working Quantity',
+            'sodNetPos' => 'Sod Net Position',
+            'sodPriceType' => 'Sod Price Type',
+            'date' => 'Date',
+            'modified' => 'Date Modified',
+            'open' => 'Open',
+            'closed' => 'Closed',
+            'parent' => 'Parent',
+        ];
+
+        foreach ($data as $datum) {
+            
+        }
+        return $data;
+    }
 }
 
 ?>
