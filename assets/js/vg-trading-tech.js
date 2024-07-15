@@ -34,44 +34,63 @@ function triggerSearchPosition(element){
     console.log(element.value);
 }
 
-function triggerUpdateTtSignalMail(el, mailId){
+function triggerUpdateTtSignalMail(el, mailId, preview=true){
     const openMailField = document.getElementById(`for-${el.id}`);
-    const closeMailPreview = document.getElementById(`close-mail-${mailId}`);
-    const openMailPreview = document.getElementById(`open-mail-${mailId}`);
+    const closeMailPreview = document.getElementById(`close-mail-jform_params_load_acym_mail-${mailId}`);
+    const openMailPreview = document.getElementById(`open-mail-jform_params_load_acym_mail-${mailId}`);
     var allMailId = el.getAttribute('data-id');
-    let task = 'close';
-    if (el.id.includes('-open')) {
-        task = 'open';
-    }
-    allMailId = JSON.parse(allMailId);
-    allMailId = allMailId.filter(function(number){
-        return number != mailId;
-    })
 
-    if (task === 'close') {
-        closeMailPreview.style.display = 'block';
-    } else {
-		openMailPreview.style.display = 'block';
-	}
-    for (let i=0; i<allMailId.length; i++) {
+    if (openMailField) {
+        openMailField.value = mailId;
+    }
+
+    if (preview) {
+        let task = 'close';
+        if (el.id.includes('-open')) {
+            task = 'open';
+        }
+        allMailId = JSON.parse(allMailId);
+        allMailId = allMailId.filter(function (number) {
+            return number != mailId;
+        })
 
         if (task === 'close') {
-            var closePreview = document.getElementById(`close-mail-${allMailId[i]}`);
-            if (!closePreview) return;
-            closePreview.style.display = 'none';
+            closeMailPreview.style.display = 'block';
+        } else {
+            openMailPreview.style.display = 'block';
         }
-        if (task === 'open') {
-            var openPreview = document.getElementById(`open-mail-${allMailId[i]}`);
-            if (!openPreview) return;
-            openPreview.style.display = 'none';
+        for (let i = 0; i < allMailId.length; i++) {
+            if (task === 'close') {
+                var closePreview = document.getElementById(`close-mail-jform_params_load_acym_mail-${allMailId[i]}`);
+                if (!closePreview) return;
+                closePreview.style.display = 'none';
+            }
+            if (task === 'open') {
+                var openPreview = document.getElementById(`open-mail-jform_params_load_acym_mail-${allMailId[i]}`);
+                if (!openPreview) return;
+                openPreview.style.display = 'none';
+            }
         }
     }
-    openMailField.value = mailId;
+    loadMailContentIntoEditor(mailId);
 }
 
 //==========================================
 // ajax handling
 //==========================================
+
+function loadMailContentIntoEditor(mailId){
+    const editorIframe = document.getElementById('jform_params_preview_acym_mail_templates__ifr');
+    if (!editorIframe) return;
+    const docIfr = editorIframe.contentDocument || editorIframe.contentWindow.document;
+    const bodyContent = docIfr.querySelector('body#tinymce');
+    // id = open-mail-jform_params_acym_temps_preview-9
+    const currentMailPreview = document.getElementById(`open-mail-jform_params_acym_temps_preview-${mailId}`);
+    if (currentMailPreview) {
+        bodyContent.innerHTML = currentMailPreview.innerHTML;
+    }
+}
+
 async function loadPage(pageNumber, element){
     const pageWrapper = document.querySelector('ul.vg-position-pagination');
     if (!pageWrapper) return;
