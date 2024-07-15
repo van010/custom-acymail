@@ -2,7 +2,7 @@
 	background-color: #009879;
 	border: none;
 	color: white;
-	margin-left: 2px;
+	margin-right: 4px;
 	padding: 4px 8px;
 	text-align: center;
 	text-decoration: none;
@@ -229,4 +229,8 @@
 
 .vg-hide {
 	display: none;
+}
+
+#tbl-trading-data, .vg-position-pagination, .vg-position-search-container {
+	/*display: none;*/
 }

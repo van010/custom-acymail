@@ -21,6 +21,45 @@ class vgComTradingTech
     }
 
     /**
+     * @param string $task
+     * @param string $name
+     * @return string
+     */
+    public static function displayTradingPosition($task, $name)
+    {
+        $fieldName = $task . "_positions";
+        $fieldsetId = 'jform_params_' . $fieldName;
+        $textSelectAll = Text::_('PLG_VG_TRADING_TECH_SELECT_ALL_POSITION_ATTRS');
+        $textSelectNone = Text::_('PLG_VG_TRADING_TECH_SELECT_NONE_POSITION_ATTRS');
+        $plgTradingAttrs = vgTradingTechHelper::getPlgTradingAttrs();
+        $plgTradingParams = json_decode($plgTradingAttrs->params);
+        $position_column_names = vgTradingTechHelper::getColumnNames('#__tt_positions');
+        $html = "<fieldset name='$name' id='$fieldsetId' class='checkboxes'>";
+		$html .= "<button class='btn-attrs-all' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 1)'>$textSelectAll</button>";
+		$html .= "<button class='btn-attrs-none' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 0)'>$textSelectNone</button><br>";
+		$html .= "<legend class='visually-hidden'></legend>";
+
+	    foreach ($position_column_names as $key => $colName)
+	    {
+            $checked = !empty($plgTradingParams->$fieldName) && in_array($colName, $plgTradingParams->$fieldName) ? 'checked' : '';
+		    $html  .= '<div class="form-check form-check-inline">';
+		    $id    = $fieldsetId. '-' . $key;
+		    $name  = "jform[params][" . $fieldName . "][]";
+		    $value = $colName;
+			$class = 'form-check-input';
+
+			$html .= "<input type='checkbox' class='$class' id='$id' name='$name' value='$value' $checked/>";
+            $html .= "<label for='$id' class='form-check-label'>$colName</label>";
+            $html .= '</div>';
+			if (($key+1) % 5 == 0) {
+			    $html .= '<br>';
+			}
+		}
+		$html .= '</fieldset>';
+        return $html;
+    }
+
+    /**
 	 * @param $positions
 	 *
 	 * @return string
@@ -48,7 +87,8 @@ class vgComTradingTech
         foreach ($positions as $key => $position) {
             $key += 1;
             $positionId = $position['id'];
-            $tagName = "{positionId:$positionId}";
+            $tagName = json_encode($position);
+            // $tagName = "{positionId:$positionId}";
 	        $html .= "<tr style='cursor:pointer' onclick='changePosition($tagName, jQuery(this))'>";
 			$html .= "<td>$key</td>";
             foreach ($position as $item) {

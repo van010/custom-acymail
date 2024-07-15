@@ -8,7 +8,7 @@ const baseUrl = Joomla.getOptions('system.paths');
 const joomlaApi = baseUrl.base + '/index.php?option=com_ajax&plugin=vg_trading_tech&format=json&group=system';
 
 function selectAllPositionAttrs(element, task){
-    const fieldPositions = document.getElementById('jform_params_select_positions');
+    const fieldPositions = document.getElementById(element.getAttribute('data-for').trim());
     if (!fieldPositions) return;
     fieldPositions.querySelectorAll('input').forEach(function (el, idx){
         if (task) {

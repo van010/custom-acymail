@@ -19,12 +19,14 @@
 ✔ complete ajax load data for page
     Start loading acymailing templates
         ✔+ show selection mail templates
-            - ajx embed selected mail content into editor
+            ✔- JS embed selected mail content into editor
         + let user can load mail content into joomla editor
-            -> save button
+            -> save button:
+            	update
+            	save as new
             - directly send mail into list of Users in user tab
         + insert data from trading table to this form
 
 feature:
 	+ User selection check to send mail
-	+ exclude position fields when sending mail
+	✔+ exclude position fields when sending mail
