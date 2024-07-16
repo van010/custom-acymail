@@ -26,7 +26,10 @@
             	save as new
             - directly send mail into list of Users in user tab
         + insert data from trading table to this form
+            - insert into blank template by pointer
+            - insert follow code: {net_position}
 
 feature:
 	+ User selection check to send mail
 	✔+ exclude position fields when sending mail
+

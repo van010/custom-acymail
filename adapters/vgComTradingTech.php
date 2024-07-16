@@ -90,9 +90,10 @@ class vgComTradingTech
             $key += 1;
             // $positionId = $position['id'];
             $tagName = json_encode($position);
-            $mappingKeys = self::mappingPositionsKey($position);
+            $mapKeys = json_encode(self::mappingPositionsKey($position));
+			// echo '<pre style="color: red">';print_r($mappingKeys);echo '</pre>';
             // $tagName = "{positionId:$positionId}";
-	        $html .= "<tr style='cursor:pointer' onclick='changePosition($tagName, jQuery(this))'>";
+	        $html .= "<tr style='cursor:pointer' onclick='changePosition($tagName, $mapKeys, jQuery(this))'>";
 			$html .= "<td>$key</td>";
             foreach ($position as $item) {
 	            $html .= "<td>$item</td>";
@@ -169,7 +170,7 @@ class vgComTradingTech
 
     public static function mappingPositionsKey($data)
     {
-        $mapKeys = [
+        $mapKeysOrigin = [
             'portfolio_id' => 'Portfolio ID',
             'accountId' => 'Account ID',
             'instrumentId' => 'Instrument ID',
@@ -192,11 +193,72 @@ class vgComTradingTech
             'open' => 'Open',
             'closed' => 'Closed',
             'parent' => 'Parent',
+	        'name' => 'Instrument Name',
+	        'productSymbol' => 'Product Symbol',
+	        'productId' => 'Product ID',
+	        'productName' => 'Product Name',
+	        'instru_modified' => 'Instrument Date Modified',
+	        'instrument_link' => 'Instrument Link',
+	        'created' => 'Instrument Date Created',
+        ];
+		/*// map to create language
+        foreach ($mapKeysOrigin as $key => $mapKey) {
+			$new = str_replace(' ', '_', $mapKey);
+			$new = strtoupper($new);
+			$value = "MAP_$new=\"" . $mapKey . '"';
+			echo '<pre style="color: red">';print_r($value);echo '</pre>';
+		}*/
+	    // print to create array with text::_ language
+        /*foreach ($mapKeysOrigin as $key => $mapKey) {
+			$new = str_replace(' ', '_', $mapKey);
+			$new = strtoupper($new);
+			$value = "'$key'" . " => Text::_('MAP_$new'),";
+			echo '<pre style="color: red">';print_r($value);echo '</pre>';
+	    }*/
+
+        $mapKeys = [
+            'portfolio_id' => Text::_('MAP_PORTFOLIO_ID'),
+            'accountId' => Text::_('MAP_ACCOUNT_ID'),
+            'instrumentId' => Text::_('MAP_INSTRUMENT_ID'),
+            'avgBuy' => Text::_('MAP_AVERAGE_BUY'),
+            'avgSell' => Text::_('MAP_AVERAGE_SELL'),
+            'buyFillQty' => Text::_('MAP_BUY_FILL_QUANTITY'),
+            'buyWorkingQty' => Text::_('MAP_BUY_WORKING_QUANTITY'),
+            'netPosition' => Text::_('MAP_NET_POSITION'),
+            'openAvgPrice' => Text::_('MAP_OPEN_AVERAGE_PRICE'),
+            'pln' => Text::_('MAP_PLN'),
+            'pnlPrice' => Text::_('MAP_PLN_PRICE'),
+            'pnlPriceType' => Text::_('MAP_PLN_PRICE_TYPE'),
+            'realizedPnl' => Text::_('MAP_REALIZED_PNL'),
+            'sellFillQty' => Text::_('MAP_SELL_FILL_QUANTITY'),
+            'sellWorkingQty' => Text::_('MAP_SELL_WORKING_QUANTITY'),
+            'sodNetPos' => Text::_('MAP_SOD_NET_POSITION'),
+            'sodPriceType' => Text::_('MAP_SOD_PRICE_TYPE'),
+            'date' => Text::_('MAP_DATE'),
+            'modified' => Text::_('MAP_DATE_MODIFIED'),
+            'open' => Text::_('MAP_OPEN'),
+            'closed' => Text::_('MAP_CLOSED'),
+            'parent' => Text::_('MAP_PARENT'),
+            'name' => Text::_('MAP_INSTRUMENT_NAME'),
+            'productSymbol' => Text::_('MAP_PRODUCT_SYMBOL'),
+            'productId' => Text::_('MAP_PRODUCT_ID'),
+            'productName' => Text::_('MAP_PRODUCT_NAME'),
+            'instru_modified' => Text::_('MAP_INSTRUMENT_DATE_MODIFIED'),
+            'instrument_link' => Text::_('MAP_INSTRUMENT_LINK'),
+            'created' => Text::_('MAP_INSTRUMENT_DATE_CREATED'),
         ];
 
-        foreach ($data as $datum) {
-            
+        foreach ($data as $key => $val) {
+			$newKey = $key;
+            if (isset($mapKeys[$key])) {
+	            $newKey = $mapKeys[$key];
+            }
+            $data[$key] = [
+                'val' => $val,
+                'key' => $newKey
+            ];
         }
+
         return $data;
     }
 }

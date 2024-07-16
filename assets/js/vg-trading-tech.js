@@ -19,8 +19,25 @@ function selectAllPositionAttrs(element, task){
     });
 }
 
-function changePosition(tagName, element){
-    console.log(tagName);
+function changePosition(tagName, mapKeys, element){
+    console.log(mapKeys);
+    const editor = tinymce.get("acym_mail_preview_editor");
+    if (!editor) {
+        console.log('Editor not found!');
+        return ;
+    }
+	const position = editor.selection.getRng();
+	const selectedContent = editor.selection.getContent();
+	const startPos = position.startOffset;
+	const endPos = position.endOffset;
+    let newContent = '';
+    newContent = selectedContent + JSON.stringify(tagName);
+    editor.selection.setContent(newContent);
+    editor.undoManager.add();
+}
+
+function parsePositionData(mapKeys){
+
 }
 
 function vgTradingInit(){
