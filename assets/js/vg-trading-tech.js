@@ -27,12 +27,14 @@ function changePosition(tagName, mapKeys, insertPositionBy, element){
         return ;
     }
 
+    const htmlData = parsePositionData(mapKeys);
+
     switch (insertPositionBy) {
         case 'insert_multiple_by_pointer':
-            insertMultipleByPointer(editor, 'pointer', tagName);
+            insertMultipleByPointer(editor, 'pointer', htmlData);
             break;
         case 'insert_multiple_by_text_selected':
-            insertMultipleByPointer(editor, 'text_selected', tagName);
+            insertMultipleByPointer(editor, 'text_selected', htmlData);
             break;
         case 'insert_one_by_shortcode':
             insertOneByShortCode(editor);
@@ -45,7 +47,8 @@ function changePosition(tagName, mapKeys, insertPositionBy, element){
 }
 
 function insertMultipleByPointer(editor, task, positionData){
-    const strPositionData = JSON.stringify(positionData);
+    // const strPositionData = JSON.stringify(positionData);
+    const strPositionData = positionData.innerHTML;
     const position = editor.selection.getRng();
 	const selectedContent = editor.selection.getContent();
 	const startPos = position.startOffset;
@@ -68,7 +71,25 @@ function insertOneByShortCode(){
 }
 
 function parsePositionData(mapKeys){
-
+    if (typeof mapKeys === 'string') {
+        mapKeys = JSON.parse(mapKeys);
+    }
+    const mapKeysValue = Object.values(mapKeys);
+    const dataTradingWrapper = document.createElement('div');
+    dataTradingWrapper.id = 'data-trading-wrapper';
+    let content = '';
+    for (const property in mapKeysValue) {
+        var colName = mapKeysValue[property].key;
+        var colVal = mapKeysValue[property].val;
+        var pClass = Object.keys(mapKeys)[property];
+        if (Object.keys(mapKeys)[property] === 'instrument_link') {
+            content += `<a class="${pClass}" style="color: #007cd2" href="${colVal}">${colName}: ${colVal}</a>`;
+        } else {
+            content += `<p class="${pClass}">${colName}: ${colVal}</p>`;
+        }
+    }
+    dataTradingWrapper.innerHTML = content;
+    return dataTradingWrapper;
 }
 
 function vgTradingInit(){
