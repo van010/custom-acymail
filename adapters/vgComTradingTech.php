@@ -74,10 +74,13 @@ class vgComTradingTech
 		    return '';
 		}
 		$idxText = Text::_('Idx');
-		$imgLoading = Uri::root(true) . '/plugins/system/vg_trading_tech/assets/images/loading.gif';
+        $columnNames = array_keys($positions[0]);
+        $imgLoading = Uri::root(true) . '/plugins/system/vg_trading_tech/assets/images/loading.gif';
+
+        $insertPositionBy = vgTradingTechHelper::getParams('insert_position_by');
+
         $html = '';
 	    $html .= '<table id="tt-position-lists">';
-		$columnNames = array_keys($positions[0]);
 		$html .= '<tr class="tt-column-names">';
         $html .= "<th class='tt-name-idx'>$idxText</th>";
         foreach ($columnNames as $columnName) {
@@ -93,7 +96,7 @@ class vgComTradingTech
             $mapKeys = json_encode(self::mappingPositionsKey($position));
 			// echo '<pre style="color: red">';print_r($mappingKeys);echo '</pre>';
             // $tagName = "{positionId:$positionId}";
-	        $html .= "<tr style='cursor:pointer' onclick='changePosition($tagName, $mapKeys, jQuery(this))'>";
+	        $html .= "<tr style='cursor:pointer' onclick='changePosition($tagName, $mapKeys, \"$insertPositionBy\", jQuery(this))'>";
 			$html .= "<td>$key</td>";
             foreach ($position as $item) {
 	            $html .= "<td>$item</td>";

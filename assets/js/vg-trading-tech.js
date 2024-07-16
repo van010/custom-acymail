@@ -19,21 +19,52 @@ function selectAllPositionAttrs(element, task){
     });
 }
 
-function changePosition(tagName, mapKeys, element){
-    console.log(mapKeys);
+function changePosition(tagName, mapKeys, insertPositionBy, element){
+    console.log(insertPositionBy);
     const editor = tinymce.get("acym_mail_preview_editor");
     if (!editor) {
         console.log('Editor not found!');
         return ;
     }
-	const position = editor.selection.getRng();
+
+    switch (insertPositionBy) {
+        case 'insert_multiple_by_pointer':
+            insertMultipleByPointer(editor, 'pointer', tagName);
+            break;
+        case 'insert_multiple_by_text_selected':
+            insertMultipleByPointer(editor, 'text_selected', tagName);
+            break;
+        case 'insert_one_by_shortcode':
+            insertOneByShortCode(editor);
+            break;
+        case '':
+        default:
+            console.log(`Task ${insertPositionBy} not found!`);
+            return ;
+    }
+}
+
+function insertMultipleByPointer(editor, task, positionData){
+    const strPositionData = JSON.stringify(positionData);
+    const position = editor.selection.getRng();
 	const selectedContent = editor.selection.getContent();
 	const startPos = position.startOffset;
 	const endPos = position.endOffset;
     let newContent = '';
-    newContent = selectedContent + JSON.stringify(tagName);
+    if (task === 'pointer') {
+        newContent = selectedContent + strPositionData;
+    } else if (task === 'text_selected') {
+        newContent = strPositionData
+    } else {
+        alert(`Task ${task} not found.`);
+        return ;
+    }
     editor.selection.setContent(newContent);
     editor.undoManager.add();
+}
+
+function insertOneByShortCode(){
+
 }
 
 function parsePositionData(mapKeys){
@@ -199,6 +230,7 @@ function showUpdateMailMsg(text, code){
 function hideLoading(){
     const tblOverlay = document.querySelector('div.table-overlay');
     // tblOverlay.style.display = 'block';
+    if (!tblOverlay) return;
     tblOverlay.remove();
 }
 
