@@ -18,6 +18,7 @@ class JFormFieldAcymMailPreview extends FormField
 		$html = 'Load acym templates';
 		$html .= "<div class='select-acym-templates'>";
 		$html .= vgComAcym::tradingOpenMail($allMails, 'jform_params_acym_temps_preview', 'jform[params][acym_temps_preview]', 0);
+        $html .= "<button id='vg-send-mail' type='button' onclick='new vgApiHandling().sendMailToUsers()'>Send mail</button>";
 		$html .= "</div>";
 		$html .= "<div class='vg-editor'>";
 		// $html .= $editor->embedContentToEditor($this->name, '<p>hello world</p>');

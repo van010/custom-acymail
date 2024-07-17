@@ -13,6 +13,14 @@ class vgApiHandling {
 		console.log('vgApiHandling loaded successfully!');
 	}
 
+	async sendMailToUsers() {
+		console.log('send');
+	}
+
+	async updateUsersSendMail($userList) {
+
+	}
+
 	async updateTtSignalMail() {
 		const fieldOpenMail = document.getElementById('for-jform_params_load_acym_mail-open');
 		const fieldCloseMail = document.getElementById('for-jform_params_load_acym_mail-close');

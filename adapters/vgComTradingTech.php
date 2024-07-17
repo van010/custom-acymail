@@ -20,6 +20,74 @@ class vgComTradingTech
         
     }
 
+	public static function displayTblUsers($name)
+	{
+		$allUsers = self::getUsersSendMail();
+		$fieldName = 'select_users';
+		$fieldsetId = 'jform_params_' . $fieldName;
+		$textSelectAll = Text::_('PLG_VG_TRADING_TECH_SELECT_ALL_USERS');
+        $textSelectNone = Text::_('PLG_VG_TRADING_TECH_SELECT_NONE_POSITION_ATTRS');
+        $textUpdateUser = Text::_('PLG_VG_TRADING_TECH_UPDATE_USERS');
+        $html = '';
+		$html .= "<div class='group-btn-trading'><button class='btn-attrs-all' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 1)'>$textSelectAll</button>";
+		$html .= "<button class='btn-attrs-none' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 0)'>$textSelectNone</button><br>";
+        $html .= "<button id='update-users' type='button' onclick='new vgApiHandling().updateUsersSendMail()'>$textUpdateUser</button></div>";
+		$html .= "<legend class='visually-hidden'></legend>";
+		$html .= "<table id='tbl-select-users'>";
+		$html .= "<tr>
+					<th>Users</th>
+					<th>Email</th>
+					<th>Send Mail</th>
+				</tr>";
+		foreach ($allUsers as $user)
+		{
+			$userName = $user['name'];
+            $userId = $user['id'];
+			$email = $user['email'];
+			$sendMail = $user['send_mail'];
+            $checked = $sendMail == 1 ? 'checked' : '';
+			$html .= "<tr></tr>";
+			$html .= "<td>$userName</td>";
+			$html .= "<td>$email</td>";
+			$html .= "<td><input type='checkbox' id='$userId' name='$userId' $checked></td>";
+			$html .= "</tr>";
+		}
+		$html .= "</table>";
+		return $html;
+	}
+
+    public static function displayUsers($name) {
+        $allUsers = self::getUsersSendMail();
+		$fieldName = 'select_users_send_mail';
+		$fieldsetId = 'jform_params_' . $fieldName;
+		$textSelectAll = Text::_('PLG_VG_TRADING_TECH_SELECT_ALL_USERS');
+        $textSelectNone = Text::_('PLG_VG_TRADING_TECH_SELECT_NONE_POSITION_ATTRS');
+        $textUpdateUser = Text::_('PLG_VG_TRADING_TECH_UPDATE_USERS');
+        $html = '';
+		$html .= "<div class='group-btn-trading'>";
+		$html .= "<button class='btn-attrs-all' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 1)'>$textSelectAll</button>";
+		$html .= "<button class='btn-attrs-none' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 0)'>$textSelectNone</button><br>";
+        $html .= "</div>";
+		$html .= "<legend class='visually-hidden'></legend>";
+        $html .= "<fieldset name='$name' id='$fieldsetId' class='checkboxes'>";
+        foreach ($allUsers as $user) {
+            $userName = $user['name'];
+            $userId = $user['id'];
+			$email = $user['email'];
+            $id = "user_$userId";
+			$sendMail = $user['send_mail'];
+            $checked = $sendMail == 1 ? 'checked' : '';
+            $name_ = "jform[params][" . $fieldName . "][]";
+            $html  .= '<div class="form-check form-check-inline">';
+            $html .= "<input class='form-check-input' type='checkbox' id='$id' name='$name_' value='$userId' $checked>";
+            $html .= "<label for='$id' class='form-check-label'><span class='label-user-name'>$userName</span>|<span class='label-user-email'>$email</span></label>";
+            $html .= "</div>";
+            $html .= "<br>";
+        }
+        $html .= "</fieldset>";
+        return $html;
+    }
+
     /**
      * @param string $task
      * @param string $name
@@ -44,12 +112,12 @@ class vgComTradingTech
 	    foreach ($allColumns as $key => $colName)
 	    {
             $checked = !empty($plgTradingParams->$fieldName) && in_array($colName, $plgTradingParams->$fieldName) ? 'checked' : '';
-		    $html  .= '<div class="form-check form-check-inline">';
 		    $id    = $fieldsetId. '-' . $key;
 		    $name  = "jform[params][" . $fieldName . "][]";
 		    $value = $colName;
 			$class = 'form-check-input';
 
+            $html  .= '<div class="form-check form-check-inline">';
 			$html .= "<input type='checkbox' class='$class' id='$id' name='$name' value='$value' $checked/>";
             $html .= "<label for='$id' class='form-check-label'>$colName</label>";
             $html .= '</div>';
@@ -152,6 +220,26 @@ class vgComTradingTech
 	    return 1;
 	}
 
+	/**
+	 *
+	 * @return array|mixed
+	 *
+	 * @since version
+	 */
+	public static function getUsersSendMail()
+	{
+		$db = Factory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('u.*, ml.send_mail')
+			->from('`#__users` AS u')
+			->join('LEFT', '`#__tt_mail_list` AS ml ON ml.user_id = u.id')
+			// ->where('ml.`send_mail` = 1')
+			->where('u.block = 0');
+        $db->setQuery($query);
+		$allUsers = $db->loadAssocList('id');
+		return $allUsers;
+	}
+
     public static function getAllTradingData()
     {
         $db = Factory::getDbo();
@@ -193,6 +281,79 @@ class vgComTradingTech
 		}
         return $db->loadAssoclist();
 	}
+
+    /**
+     * @param $userList
+     * @return void
+     */
+	public static function updateUsersSendMail($userList)
+	{
+        $db = Factory::getDbo();
+        $app = Factory::getApplication();
+        $query = $db->getQuery(true);
+
+        $query->select('user_id')
+            ->from('`#__tt_mail_list`');
+        $db->setQuery($query);
+        $allUsers = $db->loadColumn();
+		if (empty($userList)) {
+			$userList = [];
+		}
+        $diff = array_diff($userList, $allUsers);
+
+        if (!empty($diff)) {
+            $query->clear();
+            $query->insert('`#__tt_mail_list`')
+                ->columns(['send_mail', 'user_id']);
+	        foreach ($diff as $userId)
+	        {
+                $query->values('1,' . $db->quote($userId));
+            }
+            $db->setQuery($query);
+            if ($db->execute()) {
+                $app->enqueueMessage(sprintf('Insert %s user(s) into Users Trading Techs', count($diff)));
+            }
+        }
+
+        $userNonSend = array_diff($allUsers, $userList);
+		if (!empty($userNonSend))
+		{
+			$query->clear();
+			$fields = [
+				'`send_mail` = 0',
+			];
+			$query->update('#__tt_mail_list')
+				->set($fields)
+				->where('`user_id` IN (' . implode(', ', $userNonSend) . ')');
+			$db->setQuery($query);
+			$db->execute();
+		}
+
+		if (empty($userList)) {
+			$query->clear();
+			$fields = [
+				'`send_mail` = 0',
+			];
+			$query->update('#__tt_mail_list')
+				->set($fields)
+				->where('`user_id` IN (' . implode(', ', $allUsers) . ')');
+			$db->setQuery($query);
+			$db->execute();
+		} else {
+            $query->clear();
+            $fields = [
+                '`send_mail` = 1',
+            ];
+            $query->update('#__tt_mail_list')
+                ->set($fields)
+                ->where('`user_id` IN (' . implode(', ', $userList) . ')');
+            $db->setQuery($query);
+            if ($db->execute()) {
+                $app->enqueueMessage('Update users to send mail success!');
+            }
+        }
+
+    }
 
     public static function mappingPositionsKey($data)
     {

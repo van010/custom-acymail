@@ -19,9 +19,14 @@ class PlgSystemVg_trading_tech extends CMSPlugin
 		// todo
 	}
 
-    public function onExtensionBeforeSave($context, $tbl, $is_new)
+    public function onExtensionBeforeSave($context, $tblData, $is_new)
     {
-        // todo
+		$extensionEl = $tblData->get('element');
+		if ($extensionEl !== 'vg_trading_tech') return ;
+		$params = $tblData->get('params');
+		if (empty($params)) return ;
+		$params = json_decode($params);
+		vgComTradingTech::updateUsersSendMail($params->select_users_send_mail);
     }
 
     public static function onExtensionAfterSave($context, $tbl, $is_new)

@@ -62,6 +62,13 @@
 					   type="loadAcymMailTemplates"
 					   label="PLG_VG_TRADING_TECH_MAIL_PREVIEW"/>
 			</fieldset>
+
+			<fieldset addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_tradingtech"
+					  name="config_users_send_mail"
+					  label="PLG_VG_TRADING_TECH_CONFIG_USERS_SEND_MAIL">
+				<field name="select_users_send_mail"
+					   type="selectUsersSendMail" label="PLG_VG_TRADING_TECH_SELECT_USER_SEND_MAIL"/>
+			</fieldset>
 		</fields>
 	</config>
 </extension>

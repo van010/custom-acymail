@@ -64,7 +64,7 @@
 	outline: none;
 }
 
-.vg-position-search-container button {
+.vg-position-search-container button, #vg-send-mail{
 	padding: 10px 20px;
 	border: none;
 	background-color: #007bff;
@@ -73,7 +73,7 @@
 	/*border-radius: 0 5px 5px 0;*/
 }
 
-.vg-position-search-container button:hover {
+.vg-position-search-container button:hover, #vg-send-mail:hover{
 	background-color: #0056b3;
 }
 
@@ -233,4 +233,29 @@
 
 #tbl-trading-data, .vg-position-pagination, .vg-position-search-container {
 	/*display: none;*/
+}
+
+.select-acym-templates {
+	display: flex;
+}
+
+#vg-send-mail {
+	font-weight: bold;
+	background-color: #009879;
+	height: 35%;
+	margin-top: 24px;
+	margin-left: 4px;
+	border-radius: 4px;
+}
+
+.group-btn-trading {
+	display: flex;
+}
+
+.label-user-name {
+	margin-right: 5px;
+}
+
+.label-user-email {
+	margin-left: 5px;
 }
