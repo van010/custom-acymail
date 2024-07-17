@@ -39,7 +39,7 @@ class JFormFieldLoadacymmailtemplates extends FormField
         $html = '<div class="trading-mail-config">';
         $html .= vgComAcym::tradingOpenMail($allMails, $id, $field_select_name);
         $html .= vgComAcym::tradingCloseMail($allMails, $id, $field_select_name);
-        $html .= "<button type='button' onclick='updateTtSignalMail()' class='btn btn-primary mb-2'>$btnSaveText</button>";
+        $html .= "<button type='button' onclick='new vgApiHandling().updateTtSignalMail()' class='btn btn-primary mb-2'>$btnSaveText</button>";
         $html .= "<p class='update-mail-msg'></p>";
 		$html .= '</div>';
 

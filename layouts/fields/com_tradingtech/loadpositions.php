@@ -59,9 +59,9 @@ class JFormFieldLoadPositions extends FormField
                 $class .= ' active';
             }
             if ($i < 3 || in_array($i, [$totalPositions-1, $totalPositions-2, $totalPositions-3])) {
-				$html .= "<li class='$class' onclick='loadPage($i, this)'><a>$page</a></li>";  // directly reload in page
+				$html .= "<li class='$class' onclick=' new vgApiHandling().loadPage($i, this)'><a>$page</a></li>";  // directly reload in page
             } elseif ($i == round($totalPositions/2)) {
-                $html .= "<li class='$class vg-position-pagination-dot' onclick='loadPage($i, this)' class='vg-position-pagination-dot'><a>. . .</a></li>";
+                $html .= "<li class='$class vg-position-pagination-dot' onclick='new vgApiHandling().loadPage($i, this)' class='vg-position-pagination-dot'><a>. . .</a></li>";
             }
         }
         $html .= '<li class="pag-next"><a href="#">&raquo;</a></li>';

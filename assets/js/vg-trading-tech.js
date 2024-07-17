@@ -1,4 +1,9 @@
-
+/**
+ * @plugin   	vg_trading_tech
+ * @developer	vangogh
+ * @profile 	https://www.linkedin.com/in/van-hs-0a00511b2/
+ * handle general behavior
+ */
 document.addEventListener('DOMContentLoaded', function (){
     vgTradingInit();
 });
@@ -8,6 +13,37 @@ let insertedShortCode = false;
 const baseUrl = Joomla.getOptions('system.paths');
 const joomlaApi = baseUrl.base + '/index.php?option=com_ajax&plugin=vg_trading_tech&format=json&group=system';
 
+function vgTradingInit(){
+    const trading_data_label = document.getElementById('jform_params_load_positions-lbl');
+    const acymTemplatePreview = document.getElementById('jform_params_preview_acym_mail_templates-lbl');
+    trading_data_label.parentElement.remove();
+    acymTemplatePreview.parentElement.remove();
+    loadScript(handleTextPath, function (){
+        console.log('load handleTextPath success!');
+    });
+    loadScript(handleApiPath, function (){
+        console.log('load handleApiPath success!');
+    });
+}
+
+function loadScript(url, callback){
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+    // Bind the event to the callback function.
+    // 'onreadystatechange' for IE compatibility
+    script.onload = callback;
+    script.onreadystatechange = function () {
+        if (this.readyState === 'complete' || this.readyState === 'loaded') {
+            callback();
+        }
+    };
+    document.head.appendChild(script);
+}
+
+//==========================================
+// start user behavior
+//==========================================
 function selectAllPositionAttrs(element, task){
     const fieldPositions = document.getElementById(element.getAttribute('data-for').trim());
     if (!fieldPositions) return;
@@ -18,6 +54,51 @@ function selectAllPositionAttrs(element, task){
             el.removeAttribute('checked');
         }
     });
+}
+
+function triggerSearchPosition(element){
+    console.log(element.value);
+}
+
+function triggerUpdateTtSignalMail(el, mailId, preview=true){
+    const openMailField = document.getElementById(`for-${el.id}`);
+    const closeMailPreview = document.getElementById(`close-mail-jform_params_load_acym_mail-${mailId}`);
+    const openMailPreview = document.getElementById(`open-mail-jform_params_load_acym_mail-${mailId}`);
+    var allMailId = el.getAttribute('data-id');
+
+    if (openMailField) {
+        openMailField.value = mailId;
+    }
+
+    if (preview) {
+        let task = 'close';
+        if (el.id.includes('-open')) {
+            task = 'open';
+        }
+        allMailId = JSON.parse(allMailId);
+        allMailId = allMailId.filter(function (number) {
+            return number != mailId;
+        })
+
+        if (task === 'close') {
+            closeMailPreview.style.display = 'block';
+        } else {
+            openMailPreview.style.display = 'block';
+        }
+        for (let i = 0; i < allMailId.length; i++) {
+            if (task === 'close') {
+                var closePreview = document.getElementById(`close-mail-jform_params_load_acym_mail-${allMailId[i]}`);
+                if (!closePreview) return;
+                closePreview.style.display = 'none';
+            }
+            if (task === 'open') {
+                var openPreview = document.getElementById(`open-mail-jform_params_load_acym_mail-${allMailId[i]}`);
+                if (!openPreview) return;
+                openPreview.style.display = 'none';
+            }
+        }
+    }
+    loadMailContentIntoEditor(mailId);
 }
 
 function changePosition(tagName, mapKeys, allDataMapKeys, insertPositionBy, element){
@@ -60,7 +141,13 @@ function changePosition(tagName, mapKeys, allDataMapKeys, insertPositionBy, elem
             return ;
     }
 }
+//==========================================
+// end user behavior
+//==========================================
 
+//==========================================
+// start communicating with JCE Editor
+//==========================================
 function insertMultipleByPointer(editor, task, positionData){
     // const strPositionData = JSON.stringify(positionData);
     const strPositionData = positionData.innerHTML;
@@ -159,83 +246,6 @@ function parsePositionData(mapKeys){
     return dataTradingWrapper;
 }
 
-function vgTradingInit(){
-    const trading_data_label = document.getElementById('jform_params_load_positions-lbl');
-    const acymTemplatePreview = document.getElementById('jform_params_preview_acym_mail_templates-lbl');
-    trading_data_label.parentElement.remove();
-    acymTemplatePreview.parentElement.remove();
-    loadScript(handleTextPath, function (){
-        console.log('load handleTextPath success!');
-    });
-    loadScript(handleApiPath, function (){
-        console.log('load handleApiPath success!');
-    });
-}
-
-function loadScript(url, callback){
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = url;
-    // Bind the event to the callback function.
-    // 'onreadystatechange' for IE compatibility
-    script.onload = callback;
-    script.onreadystatechange = function () {
-        if (this.readyState === 'complete' || this.readyState === 'loaded') {
-            callback();
-        }
-    };
-    document.head.appendChild(script);
-}
-
-function triggerSearchPosition(element){
-    console.log(element.value);
-}
-
-function triggerUpdateTtSignalMail(el, mailId, preview=true){
-    const openMailField = document.getElementById(`for-${el.id}`);
-    const closeMailPreview = document.getElementById(`close-mail-jform_params_load_acym_mail-${mailId}`);
-    const openMailPreview = document.getElementById(`open-mail-jform_params_load_acym_mail-${mailId}`);
-    var allMailId = el.getAttribute('data-id');
-
-    if (openMailField) {
-        openMailField.value = mailId;
-    }
-
-    if (preview) {
-        let task = 'close';
-        if (el.id.includes('-open')) {
-            task = 'open';
-        }
-        allMailId = JSON.parse(allMailId);
-        allMailId = allMailId.filter(function (number) {
-            return number != mailId;
-        })
-
-        if (task === 'close') {
-            closeMailPreview.style.display = 'block';
-        } else {
-            openMailPreview.style.display = 'block';
-        }
-        for (let i = 0; i < allMailId.length; i++) {
-            if (task === 'close') {
-                var closePreview = document.getElementById(`close-mail-jform_params_load_acym_mail-${allMailId[i]}`);
-                if (!closePreview) return;
-                closePreview.style.display = 'none';
-            }
-            if (task === 'open') {
-                var openPreview = document.getElementById(`open-mail-jform_params_load_acym_mail-${allMailId[i]}`);
-                if (!openPreview) return;
-                openPreview.style.display = 'none';
-            }
-        }
-    }
-    loadMailContentIntoEditor(mailId);
-}
-
-//==========================================
-// ajax handling
-//==========================================
-
 function loadMailContentIntoEditor(mailId){
     const bodyContent = getEditorBody();
     if (!bodyContent) return ;
@@ -252,71 +262,8 @@ function getEditorBody(){
     const docIfr = editorIframe.contentDocument || editorIframe.contentWindow.document;
     return docIfr.querySelector('body#tinymce');
 }
-
-async function loadPage(pageNumber, element){
-    const pageWrapper = document.querySelector('ul.vg-position-pagination');
-    if (!pageWrapper) return;
-    pageWrapper.querySelectorAll('li').forEach(function (el, idx){
-        if (el.className.includes('active')) {
-            el.classList.remove('active')
-        }
-    });
-    element.classList.add('active');
-    showLoading();
-    // load
-    const formData = new FormData();
-    formData.append('task', 'pagination');
-    formData.append('pageNum', pageNumber);
-    try{
-        const response = await fetch(joomlaApi, {
-            method: 'POST',
-            body: formData,
-        });
-        const rawData = await response.json();
-        if (!rawData.success) {
-            return ;
-        }
-        const data = rawData.data[0];
-        reloadDataTblTrading(data.data.html);
-        console.log(data);
-        hideLoading();
-    }catch(error){
-        console.log(error);
-    }
-    // complete ajax load data for page
-    // then load acymailing templates
-    // insert data from trading table to this form
-}
-
-async function updateTtSignalMail(){
-    const fieldOpenMail = document.getElementById('for-jform_params_load_acym_mail-open');
-    const fieldCloseMail = document.getElementById('for-jform_params_load_acym_mail-close');
-    if (!fieldCloseMail || !fieldOpenMail) return;
-
-    const closeMailId = fieldCloseMail.value;
-    const openMailId = fieldOpenMail.value;
-    const formData = new FormData();
-    formData.append('task', 'updateTtSignalMail');
-    formData.append('mailIds', JSON.stringify({closeMailId: closeMailId, openMailId: openMailId}));
-    // formData.append('openMailId', openMailId);
-    try{
-        const response = await fetch(joomlaApi, {
-            method: 'POST',
-            body: formData
-        });
-        const rawData = await response.json();
-        if (!rawData.success) {
-            return ;
-        }
-        const data = rawData.data[0];
-        showUpdateMailMsg(data.message, data.code);
-    }catch(error){
-        console.log(error);
-    }
-}
-
 //==========================================
-// end handling ajax
+// end communicating with JCE Editor
 //==========================================
 
 function showLoading(element){

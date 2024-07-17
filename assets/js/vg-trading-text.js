@@ -1,6 +1,16 @@
+/**
+ * @plugin   	vg_trading_tech
+ * @developer	vangogh
+ * @profile 	https://www.linkedin.com/in/van-hs-0a00511b2/
+ * handle text, string, html content
+ */
 class vgTextHandling {
 	constructor() {
 		// todo
+	}
+
+	runTest() {
+		console.log('vgTextHandling loaded successfully!');
 	}
 
 	extractStrings(input) {
@@ -35,9 +45,4 @@ class vgTextHandling {
 
 		return result;
 	}
-
-	runTest() {
-		console.log('Loaded successfully!');
-	}
-
 }
