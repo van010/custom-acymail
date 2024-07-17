@@ -25,7 +25,7 @@ class JFormFieldLoadPositions extends FormField
 		$input = $app->input;
 		$tradingPageId = $input->getInt('page', 0);
 		// $positions = vgComTradingTech::loadPositions(false);
-        $html .= $this->htmlSearchPosition();
+        // $html .= $this->htmlSearchPosition();
 	    // $html .= vgComTradingTech::showTableData($positions);
 	    $html .= '<div id="tbl-trading-data">';
 	    $html .= vgComTradingTech::handlePagination([], $tradingPageId)['data']['html'];
