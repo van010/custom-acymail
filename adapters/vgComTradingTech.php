@@ -68,7 +68,7 @@ class vgComTradingTech
 	 *
 	 * @since version
 	 */
-	public static function showTableData($positions, $pageNum=0)
+	public static function showTableData($positions, $allPositionsData, $pageNum=0)
     {
 		if (empty($positions)) {
 		    return '';
@@ -78,6 +78,8 @@ class vgComTradingTech
         $imgLoading = Uri::root(true) . '/plugins/system/vg_trading_tech/assets/images/loading.gif';
 
         $insertPositionBy = vgTradingTechHelper::getParams('insert_position_by');
+		/*$sampleData = json_encode(self::mappingPositionsKey($positions[0]));
+		echo "<script type='text/javascript'>var mapKeys1 = '$sampleData'</script>";*/
 
         $html = '';
 	    $html .= '<table id="tt-position-lists">';
@@ -88,16 +90,15 @@ class vgComTradingTech
 			$html .= "<th class='tt-name-$columnName'>$colum</th>";
 		}
 		$html .= '</tr>';
-
         foreach ($positions as $key => $position) {
-            $key += 1;
-            // $positionId = $position['id'];
+            $idx = $key + 1;
             $tagName = json_encode($position);
             $mapKeys = json_encode(self::mappingPositionsKey($position));
+            $allDataMapKeys = json_encode(self::mappingPositionsKey($allPositionsData[$key]));
 			// echo '<pre style="color: red">';print_r($mappingKeys);echo '</pre>';
             // $tagName = "{positionId:$positionId}";
-	        $html .= "<tr style='cursor:pointer' onclick='changePosition($tagName, $mapKeys, \"$insertPositionBy\", jQuery(this))'>";
-			$html .= "<td>$key</td>";
+	        $html .= "<tr style='cursor:pointer' onclick='changePosition($tagName, $mapKeys, $allDataMapKeys, \"$insertPositionBy\", jQuery(this))'>";
+			$html .= "<td>$idx</td>";
             foreach ($position as $item) {
 	            $html .= "<td>$item</td>";
 			}
@@ -121,17 +122,28 @@ class vgComTradingTech
         // $columns = vgTradingTechHelper::getTradingPositionAttrs();
         $allColumns = vgTradingTechHelper::getAllAssocTradingColumns();
         $columns = [$allColumns['tt_positions_str'] . ', ' .$allColumns['tt_instruments_str']];
-//        echo '<pre style="color: red">';print_r($columns);echo '</pre>';die;
 		$query->select($columns)
 			->from('`#__tt_positions` AS pos')
             ->join('INNER', '`#__tt_instruments` AS ins ON ins.id = pos.instrumentId')
 			->order('pos.date DESC')
 			->setLimit($limitPositions, $pageNum * $limitPositions);
 		$db->setQuery($query);
+        $neededData = $db->loadAssocList();
+
+        // load all association data between #__tt_positions and #__tt_instruments
+        $query->clear();
+        $query->select('pos.*, ins.*, ins.id AS instru_id, ins.modified AS instru_modified')
+            ->from('`#__tt_positions` AS pos')
+            ->join('INNER', '`#__tt_instruments` AS ins ON ins.id = pos.instrumentId')
+            ->order('pos.date DESC')
+            ->setLimit($limitPositions, $pageNum * $limitPositions);
+        $db->setQuery($query);
+        $allPositionsData = $db->loadAssocList();
+
 	    $res['code'] = 200;
 	    $res['message'] = sprintf('Loading trading position at page %s success!', $pageNum);
 		$res['success'] = true;
-		$res['data']['html'] = self::showTableData($db->loadAssocList(), $pageNum);
+		$res['data']['html'] = self::showTableData($neededData, $allPositionsData, $pageNum);
 		return $res;
     }
 
@@ -139,6 +151,17 @@ class vgComTradingTech
     {
 	    return 1;
 	}
+
+    public static function getAllTradingData()
+    {
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('pos.*, ins.*, ins.id AS instru_id, ins.modified AS instru_modified')
+            ->from('#__tt_positions AS pos')
+            ->join('INNER', '`#__tt_instruments` AS ins ON ins.id = pos.instrumentId')
+            ->order('pos.date DESC')
+            ->setLimit();
+    }
 
 	public static function loadPositions($countTotal=false, $loadMore=true)
 	{

@@ -1,0 +1,5 @@
+class vgApiHandling {
+	constructor() {
+		// todo
+	}
+}

@@ -29,9 +29,13 @@
             - create config: insert by short code or right after selection
                 ✔+ insert into blank template by pointer
                 ✔+ insert into by selected text
-                + insert follow code: {net_position}
+                ✔+ insert follow code: {net_position}
+                    ✔- insert value only
+                    ✔- insert with key - value
 
 feature:
 	+ User selection check to send mail
 	✔+ exclude position fields when sending mail
+    + create a tab to show short code and let user config label
 
+notes:

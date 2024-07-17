@@ -1,9 +1,10 @@
 
 document.addEventListener('DOMContentLoaded', function (){
     vgTradingInit();
-})
+});
 
 var $ = jQuery;
+let insertedShortCode = false;
 const baseUrl = Joomla.getOptions('system.paths');
 const joomlaApi = baseUrl.base + '/index.php?option=com_ajax&plugin=vg_trading_tech&format=json&group=system';
 
@@ -19,8 +20,7 @@ function selectAllPositionAttrs(element, task){
     });
 }
 
-function changePosition(tagName, mapKeys, insertPositionBy, element){
-    console.log(insertPositionBy);
+function changePosition(tagName, mapKeys, allDataMapKeys, insertPositionBy, element){
     const editor = tinymce.get("acym_mail_preview_editor");
     if (!editor) {
         console.log('Editor not found!');
@@ -28,6 +28,18 @@ function changePosition(tagName, mapKeys, insertPositionBy, element){
     }
 
     const htmlData = parsePositionData(mapKeys);
+    let textHandling = new vgTextHandling();
+    const htmlEditor = getEditorBody();
+    const rawContent = htmlEditor.innerHTML;
+    const shortCode = textHandling.extractStrings(rawContent);
+    const data = {
+        'short_code': shortCode, // get array of appeared shortCode inside {} from JCE editor: ['netPosition', 'avgBuy', 'productName',...]
+        'raw_content' : rawContent, // html string content from JCE editor
+        'map_keys': mapKeys, // assoc data between tt_positions and tt_instruments filtered by option: Select Trading Attributes
+                            // {accountId: {val: 123, key: 'Account Id'}, avgBuy: {val: 220, key: 'Average Buy'},...};
+        'all_data_map_keys': allDataMapKeys, // all assoc data between tt_positions and tt_instruments
+                            // {accountId: {val: 123, key: 'Account Id'}, avgBuy: {val: 220, key: 'Average Buy'},...};
+    };
 
     switch (insertPositionBy) {
         case 'insert_multiple_by_pointer':
@@ -36,8 +48,11 @@ function changePosition(tagName, mapKeys, insertPositionBy, element){
         case 'insert_multiple_by_text_selected':
             insertMultipleByPointer(editor, 'text_selected', htmlData);
             break;
-        case 'insert_one_by_shortcode':
-            insertOneByShortCode(editor);
+        case 'insert_one_by_shortcode_value':
+            insertOneByShortCode(editor, data, insertPositionBy);
+            break;
+        case 'insert_one_by_shortcode_key_value':
+            insertOneByShortCode(editor, data, insertPositionBy);
             break;
         case '':
         default:
@@ -57,7 +72,7 @@ function insertMultipleByPointer(editor, task, positionData){
     if (task === 'pointer') {
         newContent = selectedContent + strPositionData;
     } else if (task === 'text_selected') {
-        newContent = strPositionData
+        newContent = strPositionData;
     } else {
         alert(`Task ${task} not found.`);
         return ;
@@ -66,8 +81,60 @@ function insertMultipleByPointer(editor, task, positionData){
     editor.undoManager.add();
 }
 
-function insertOneByShortCode(){
+function insertOneByShortCode(editor, data, task){
+    const shortCode = data.short_code;
 
+    if (shortCode.length === 0 || insertedShortCode) {
+        alert('Reload to insert again!');
+        return;
+    }
+
+    let content = '';
+    let shortCodeData = {};
+    const bodyEditor = getEditorBody();
+    const rawContent = data.raw_content;
+    const allDataMapKeys = data.all_data_map_keys;
+
+    for (const property in shortCode){
+        const data = allDataMapKeys[shortCode[property]];
+        const a = '{'+shortCode[property]+'}';
+        if (allDataMapKeys[shortCode[property]]) {
+            const colVal = data.val;
+            const colName = data.key;
+            if (shortCode[property].includes('link')) {
+                const link = `${colName}: <a style="color: #007CD2FF" href="${colVal}">${colVal}</a>`;
+                if (task === 'insert_one_by_shortcode_value') {
+                    var strLink = `${colVal}`;
+                } else {
+                    strLink = link;
+                }
+                // const strLink = `<p>${colVal}</p>`;
+                content += link;
+                shortCodeData[a] = strLink;
+            } else {
+                // const strContent = `<p>${colVal}</p>`;
+                if (task === 'insert_one_by_shortcode_value') {
+                    var strContent = `${colVal}`;
+                } else {
+                    strContent = `${colName}: ${colVal}`;
+                }
+                const htmlContent = `<p>${colName}: ${colVal}</p>`;
+                content += htmlContent;
+                shortCodeData[a] = strContent;
+            }
+        } else {
+            content += '<p>{' + shortCode[property] + '}</p>';
+            // shortCodeData[a] = '<p>{' + shortCode[property] + '}</p>';
+            shortCodeData[a] = '{' + shortCode[property] + '}';
+        }
+    }
+    let textHandling = new vgTextHandling();
+    // const newContent = textHandling.replaceMultiple(rawShortCode, shortCodeData);
+    const newContent = textHandling.replacePlaceholders(rawContent, shortCodeData);
+    if (!bodyEditor) return ;
+    // bodyEditor.innerHTML = content;
+    bodyEditor.innerHTML = newContent;
+    insertedShortCode = true;
 }
 
 function parsePositionData(mapKeys){
@@ -83,7 +150,7 @@ function parsePositionData(mapKeys){
         var colVal = mapKeysValue[property].val;
         var pClass = Object.keys(mapKeys)[property];
         if (Object.keys(mapKeys)[property] === 'instrument_link') {
-            content += `<a class="${pClass}" style="color: #007cd2" href="${colVal}">${colName}: ${colVal}</a>`;
+            content += `${colName}: <a class="${pClass}" style="color: #007cd2" href="${colVal}">${colVal}</a>`;
         } else {
             content += `<p class="${pClass}">${colName}: ${colVal}</p>`;
         }
@@ -97,6 +164,27 @@ function vgTradingInit(){
     const acymTemplatePreview = document.getElementById('jform_params_preview_acym_mail_templates-lbl');
     trading_data_label.parentElement.remove();
     acymTemplatePreview.parentElement.remove();
+    loadScript(handleTextPath, function (){
+        console.log('load handleTextPath success!');
+    });
+    loadScript(handleApiPath, function (){
+        console.log('load handleApiPath success!');
+    });
+}
+
+function loadScript(url, callback){
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+    // Bind the event to the callback function.
+    // 'onreadystatechange' for IE compatibility
+    script.onload = callback;
+    script.onreadystatechange = function () {
+        if (this.readyState === 'complete' || this.readyState === 'loaded') {
+            callback();
+        }
+    };
+    document.head.appendChild(script);
 }
 
 function triggerSearchPosition(element){
@@ -149,15 +237,20 @@ function triggerUpdateTtSignalMail(el, mailId, preview=true){
 //==========================================
 
 function loadMailContentIntoEditor(mailId){
-    const editorIframe = document.getElementById('jform_params_preview_acym_mail_templates__ifr');
-    if (!editorIframe) return;
-    const docIfr = editorIframe.contentDocument || editorIframe.contentWindow.document;
-    const bodyContent = docIfr.querySelector('body#tinymce');
+    const bodyContent = getEditorBody();
+    if (!bodyContent) return ;
     // id = open-mail-jform_params_acym_temps_preview-9
     const currentMailPreview = document.getElementById(`open-mail-jform_params_acym_temps_preview-${mailId}`);
     if (currentMailPreview) {
         bodyContent.innerHTML = currentMailPreview.innerHTML;
     }
+}
+
+function getEditorBody(){
+    const editorIframe = document.getElementById('acym_mail_preview_editor_ifr');
+    if (!editorIframe) return;
+    const docIfr = editorIframe.contentDocument || editorIframe.contentWindow.document;
+    return docIfr.querySelector('body#tinymce');
 }
 
 async function loadPage(pageNumber, element){
