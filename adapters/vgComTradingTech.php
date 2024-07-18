@@ -239,7 +239,7 @@ class vgComTradingTech
         if (empty($data[0]['netPosition'])){
             $app = Factory::getApplication();
             $app->enqueueMessage('Please select option: <b>pos_netPosition</b> in tab <b>Select Trading Positions > Select Trading Attributes</b> to display position_close and position_open');
-            return ;
+            return $data;
         }
         if (!empty($data['position_open']) && !empty($data['position_close'])) return ;
         foreach ($data as $key => $tradeData) {
