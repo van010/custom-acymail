@@ -26,7 +26,14 @@ class PlgSystemVg_trading_tech extends CMSPlugin
 		$params = $tblData->get('params');
 		if (empty($params)) return ;
 		$params = json_decode($params);
-		vgComTradingTech::updateUsersSendMail($params->select_users_send_mail);
+
+        vgComTradingTech::updateUsersSendMail($params->select_users_send_mail);
+
+        $mailContent = $params->preview_acym_mail_templates;
+        if (!empty($mailContent)) {
+            $mailId = 1;
+            vgComAcym::updateAcymMailContent($mailId, $mailContent);
+        }
     }
 
     public static function onExtensionAfterSave($context, $tbl, $is_new)
@@ -38,7 +45,9 @@ class PlgSystemVg_trading_tech extends CMSPlugin
     {
         $app = Factory::getApplication();
         $user = Factory::getUser();
-        if (!$user->id) return ;
+        if (!$user->id) {
+			die('You need to be authorised to do this action!');
+        }
 
         $input = $app->input;
         $task = $input->get('task', '');
@@ -58,6 +67,11 @@ class PlgSystemVg_trading_tech extends CMSPlugin
             case 'updateTtSignalMail':
 				$mailIds = $input->get('mailIds', [], 'RAW');
                 $res = vgComAcym::updateTtSignalMail($res, json_decode($mailIds));
+                break;
+            case 'sendMail':
+                $mailBody = $input->get('mailBody', '', 'RAW');
+				$mailId = $input->get('mailId', 0);
+                $res = vgComAcym::sendMail($mailId, $mailBody);
                 break;
             case '':
             default:

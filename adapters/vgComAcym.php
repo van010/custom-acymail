@@ -2,6 +2,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use AcyMailing\Helpers\MailerHelper;
 
 defined('_JEXEC') or die;
 
@@ -11,6 +12,64 @@ class vgComAcym
 	{
 		// todo
 	}
+
+    public static function updateAcymMailContent($mailId, $mailContent)
+    {
+        
+    }
+
+    /**
+     * @param int $mailId
+     * @param string $mailBody
+     *
+     * @return array|null
+     *
+     * @since version
+     */
+    public static function sendMail($mailId, $mailBody)
+    {
+        $usersListAllowed = vgComTradingTech::getUsersSendMail(true);
+		$res = [
+			'code' => 200,
+			'message' => ''
+		];
+        $mailData = self::getMailAttrs($mailId);
+        $subject = $mailData['subject'];
+        foreach ($usersListAllowed as $user) {
+            $res = self::sendOneMail($user['email'], $user['name'], $subject, $mailBody, $res);
+        }
+		return $res;
+    }
+
+    /**
+     * @param string $email
+     * @param string $username
+     * @param string $subject
+     * @param string $mailBody
+     * @param array $res
+     *
+     *
+     * @since version
+     */
+    public static function sendOneMail($email, $username, $subject, $mailBody, $res)
+    {
+        $mailer = Factory::getMailer();
+        $config = Factory::getConfig();
+        $sender = [
+            $config->get('mailfrom'),
+            $config->get('fromname'),
+        ];
+        $mailer->setSender($sender);
+        $mailer->addRecipient($email);
+        $mailer->addBCC($config->get('mailfrom'));
+        $mailer->setSubject($subject);
+        $mailer->setBody($mailBody);
+        $mailer->isHtml(true);
+        if ($mailer->send()) {
+            $res['message'] .= "<p>The Trading data has been sent to: <b>$username</b></p>";
+			return $res;
+        }
+    }
 
     /**
      * @param array $res
@@ -37,6 +96,24 @@ class vgComAcym
 		$res['code'] = 201;
 		$res['success'] = false;
 		return $res;
+    }
+
+    /**
+     * @param $mailId
+     *
+     * @return mixed
+     *
+     * @since version
+     */
+    public static function getMailAttrs($mailId)
+    {
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('*')
+            ->from('`#__acym_mail`')
+            ->where('`id` = ' . $db->quote($mailId));
+        $db->setQuery($query);
+        return $db->loadAssoc();
     }
 
 	/**

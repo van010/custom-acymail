@@ -6,12 +6,15 @@
  */
 document.addEventListener('DOMContentLoaded', function (){
     vgTradingInit();
+    const inputMailId = document.getElementById('for-jform_params_load_acym_mail-open');
+    if (inputMailId) {
+        currMailId = inputMailId.value;
+    }
 });
 
 var $ = jQuery;
 let insertedShortCode = false;
-const baseUrl = Joomla.getOptions('system.paths');
-const joomlaApi = baseUrl.base + '/index.php?option=com_ajax&plugin=vg_trading_tech&format=json&group=system';
+let currMailId = null;
 
 function vgTradingInit(){
     const trading_data_label = document.getElementById('jform_params_load_positions-lbl');
@@ -61,6 +64,7 @@ function triggerSearchPosition(element){
 }
 
 function triggerUpdateTtSignalMail(el, mailId, preview=true){
+    currMailId = mailId;
     const openMailField = document.getElementById(`for-${el.id}`);
     const closeMailPreview = document.getElementById(`close-mail-jform_params_load_acym_mail-${mailId}`);
     const openMailPreview = document.getElementById(`open-mail-jform_params_load_acym_mail-${mailId}`);
@@ -171,7 +175,8 @@ function insertMultipleByPointer(editor, task, positionData){
 function insertOneByShortCode(editor, data, task){
     const shortCode = data.short_code;
 
-    if (shortCode.length === 0 || insertedShortCode) {
+    // if (shortCode.length === 0 || insertedShortCode) {
+    if (shortCode.length === 0) {
         alert('Reload to insert again!');
         return;
     }
@@ -221,7 +226,7 @@ function insertOneByShortCode(editor, data, task){
     if (!bodyEditor) return ;
     // bodyEditor.innerHTML = content;
     bodyEditor.innerHTML = newContent;
-    insertedShortCode = true;
+    // insertedShortCode = true;
 }
 
 function parsePositionData(mapKeys){
@@ -286,6 +291,17 @@ function showUpdateMailMsg(text, code){
     }
     msg.css('display', 'block');
     msg.fadeOut(2500, 'swing');
+}
+
+function showSendMailSuccess(htmlText){
+    const existedNotify = document.getElementById('send-mail-success');
+    if (existedNotify) {
+        existedNotify.remove();
+    }
+    const notifyMail = document.createElement('div');
+    notifyMail.id = 'send-mail-success';
+    notifyMail.innerHTML = htmlText
+    document.querySelector('.select-acym-templates').insertAdjacentElement('afterend', notifyMail);
 }
 
 function hideLoading(){

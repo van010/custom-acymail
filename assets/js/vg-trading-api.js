@@ -7,6 +7,8 @@
 class vgApiHandling {
 	constructor() {
 		// todo
+		this.baseUrl = Joomla.getOptions('system.paths');
+		this.joomlaApi = this.baseUrl.base + '/index.php?option=com_ajax&plugin=vg_trading_tech&format=json&group=system';
 	}
 
 	runTest (){
@@ -14,7 +16,34 @@ class vgApiHandling {
 	}
 
 	async sendMailToUsers() {
-		console.log('send');
+		console.log('sendMailToUsers');
+		const btnSendMail = document.getElementById('vg-send-mail');
+		btnSendMail.setAttribute('disabled', true);
+		btnSendMail.classList.add('disabled-button');
+		const editorContent = getEditorBody().innerHTML ?? '';
+		const formData = new FormData();
+		formData.append('task', 'sendMail');
+		formData.append('mailBody', editorContent);
+		formData.append('mailId', currMailId);
+		try{
+			const response = await fetch(this.joomlaApi, {
+				method: 'POST',
+				body: formData
+			});
+			const rawData = await response.json();
+			if (!rawData.success) {
+				console.log(rawData.message);
+			    return ;
+			}
+			const data = rawData.data[0];
+			if (data.code === 200) {
+			    showSendMailSuccess(data.message);
+				btnSendMail.removeAttribute('disabled');
+				btnSendMail.classList.remove('disabled-button');
+			}
+		}catch(error){
+		    console.log(error);
+		}
 	}
 
 	async updateUsersSendMail($userList) {
@@ -33,7 +62,7 @@ class vgApiHandling {
 		formData.append('mailIds', JSON.stringify({closeMailId: closeMailId, openMailId: openMailId}));
 		// formData.append('openMailId', openMailId);
 		try {
-			const response = await fetch(joomlaApi, {
+			const response = await fetch(this.joomlaApi, {
 				method: 'POST',
 				body: formData
 			});
@@ -63,7 +92,7 @@ class vgApiHandling {
 		formData.append('task', 'pagination');
 		formData.append('pageNum', pageNumber);
 		try {
-			const response = await fetch(joomlaApi, {
+			const response = await fetch(this.joomlaApi, {
 				method: 'POST',
 				body: formData,
 			});

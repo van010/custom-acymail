@@ -259,3 +259,33 @@
 .label-user-email {
 	margin-left: 5px;
 }
+
+.disabled-button {
+	background-color: #6c757d !important; /* Use a gray color to indicate it's disabled */
+	cursor: not-allowed !important;
+	pointer-events: none; /* Disable hover and click events */
+}
+
+.disabled-button:hover {
+	background-color: #6c757d; /* Ensure the hover state doesn't change the color */
+	cursor: not-allowed;
+}
+
+#send-mail-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    padding: 15px;
+    margin: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+#send-mail-success p {
+    margin: 0 0 10px;
+}
+
+#send-mail-success p:last-child {
+    margin-bottom: 0;
+}

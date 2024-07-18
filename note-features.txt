@@ -33,8 +33,10 @@
                     ✔- insert value only
                     ✔- insert with key - value
 
+✔ Send mail
+
 feature:
-	+ User selection check to send mail
+	✔+ User selection check to send mail
 	✔+ exclude position fields when sending mail
     + create a tab to show short code and let user config label
 

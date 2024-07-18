@@ -56,7 +56,11 @@ class vgComTradingTech
 		return $html;
 	}
 
-    public static function displayUsers($name) {
+    /**
+     * @param string $fieldsetName
+     * @return string
+     */
+    public static function displayUsers($fieldsetName) {
         $allUsers = self::getUsersSendMail();
 		$fieldName = 'select_users_send_mail';
 		$fieldsetId = 'jform_params_' . $fieldName;
@@ -69,7 +73,7 @@ class vgComTradingTech
 		$html .= "<button class='btn-attrs-none' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 0)'>$textSelectNone</button><br>";
         $html .= "</div>";
 		$html .= "<legend class='visually-hidden'></legend>";
-        $html .= "<fieldset name='$name' id='$fieldsetId' class='checkboxes'>";
+        $html .= "<fieldset name='$fieldsetName' id='$fieldsetId' class='checkboxes'>";
         foreach ($allUsers as $user) {
             $userName = $user['name'];
             $userId = $user['id'];
@@ -197,6 +201,8 @@ class vgComTradingTech
 			->setLimit($limitPositions, $pageNum * $limitPositions);
 		$db->setQuery($query);
         $neededData = $db->loadAssocList();
+        // parse position open and close
+        $neededData = self::parsePositionOpenClose($neededData);
 
         // load all association data between #__tt_positions and #__tt_instruments
         $query->clear();
@@ -207,6 +213,8 @@ class vgComTradingTech
             ->setLimit($limitPositions, $pageNum * $limitPositions);
         $db->setQuery($query);
         $allPositionsData = $db->loadAssocList();
+        // parse position open and close
+        $allPositionsData = self::parsePositionOpenClose($allPositionsData);
 
 	    $res['code'] = 200;
 	    $res['message'] = sprintf('Loading trading position at page %s success!', $pageNum);
@@ -220,21 +228,51 @@ class vgComTradingTech
 	    return 1;
 	}
 
+    /**
+     * modified data, add attributes: position_close & position_open
+     * 
+     * @param array $data
+     * @return array $data
+     */
+	public static function parsePositionOpenClose($data)
+	{
+        if (empty($data[0]['netPosition'])){
+            $app = Factory::getApplication();
+            $app->enqueueMessage('Please select option: <b>pos_netPosition</b> in tab <b>Select Trading Positions > Select Trading Attributes</b> to display position_close and position_open');
+            return ;
+        }
+        if (!empty($data['position_open']) && !empty($data['position_close'])) return ;
+        foreach ($data as $key => $tradeData) {
+            $sell = "Sell: " . $tradeData['avgSell'];
+            $buy = "Buy: " . $tradeData['avgBuy'];
+            $data[$key]['position_open'] = $sell;
+            $data[$key]['position_close'] = $sell;
+            if ($tradeData['netPosition'] > 0) {
+                $data[$key]['position_open'] = $buy;
+            } else {
+                $data[$key]['position_close'] = $buy;
+            }
+        }
+		return $data;
+    }
+
 	/**
 	 *
 	 * @return array|mixed
 	 *
 	 * @since version
 	 */
-	public static function getUsersSendMail()
+	public static function getUsersSendMail($sendMail=false)
 	{
 		$db = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('u.*, ml.send_mail')
 			->from('`#__users` AS u')
-			->join('LEFT', '`#__tt_mail_list` AS ml ON ml.user_id = u.id')
-			// ->where('ml.`send_mail` = 1')
-			->where('u.block = 0');
+			->join('LEFT', '`#__tt_mail_list` AS ml ON ml.user_id = u.id');
+        if ($sendMail) {
+            $query->where('ml.`send_mail` = 1');
+        }
+        $query->where('u.block = 0');
         $db->setQuery($query);
 		$allUsers = $db->loadAssocList('id');
 		return $allUsers;
@@ -387,6 +425,8 @@ class vgComTradingTech
 	        'instru_modified' => 'Instrument Date Modified',
 	        'instrument_link' => 'Instrument Link',
 	        'created' => 'Instrument Date Created',
+            'position_open' =>  'Position Open',
+            'position_close' => 'Position Close'
         ];
 		/*// map to create language
         foreach ($mapKeysOrigin as $key => $mapKey) {
@@ -433,6 +473,8 @@ class vgComTradingTech
             'instru_modified' => Text::_('MAP_INSTRUMENT_DATE_MODIFIED'),
             'instrument_link' => Text::_('MAP_INSTRUMENT_LINK'),
             'created' => Text::_('MAP_INSTRUMENT_DATE_CREATED'),
+            'position_open' => Text::_('MAP_POSITION_OPEN'),
+            'position_close' => Text::_('MAP_POSITION_CLOSE'),
         ];
 
         foreach ($data as $key => $val) {
