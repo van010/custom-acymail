@@ -12,6 +12,9 @@ class JFormFieldSelectTradingLabels extends FormField
 
     public function getInput()
     {
+        if (!vgTradingTechHelper::comTradingTechExisted()) {
+            return Text::_('PLG_VG_TRADING_COM_TRADING_NOT_EXIST');
+        }
         $html = '';
         $id = "jform_params_select_trading_labels";
         $name = $this->name;

@@ -15,6 +15,9 @@ class JFormFieldSelectPositions extends FormField
 
     public function getInput()
     {
+        if (!vgTradingTechHelper::comTradingTechExisted()) {
+            return Text::_('PLG_VG_TRADING_COM_TRADING_NOT_EXIST');
+        }
 		$html = vgComTradingTech::displayTradingPosition('select', $this->name);
         return $html;
     }

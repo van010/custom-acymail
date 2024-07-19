@@ -18,6 +18,9 @@ class JFormFieldLoadacymmailtemplates extends FormField
 	 */
 	public function getInput(): string
 	{
+        if (!vgTradingTechHelper::comAcymExisted()) {
+            return Text::_('PLG_VG_TRADING_COM_ACYM_NOT_EXIST');
+        }
 		$html = '';
         $html .= $this->loadAcymMailTemplates();
 		return $html;

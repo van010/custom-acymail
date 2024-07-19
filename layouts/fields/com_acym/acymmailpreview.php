@@ -2,6 +2,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Form\FormField;
 
 require_once JPATH_ROOT . '/plugins/system/vg_trading_tech/adapters/editors.php';
@@ -12,6 +13,9 @@ class JFormFieldAcymMailPreview extends FormField
 
 	public function getInput()
 	{
+        if (!vgTradingTechHelper::comAcymExisted()) {
+            return Text::_('PLG_VG_TRADING_COM_ACYM_NOT_EXIST');
+        }
 		$editor = new vgEditors();
 		$allMails = vgComAcym::getMailTemplates();
 		$content = $allMails['open_mail_content'];

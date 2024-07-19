@@ -19,6 +19,9 @@ class JFormFieldLoadPositions extends FormField
 	 */
     public function getInput()
     {
+        if (!vgTradingTechHelper::comTradingTechExisted()) {
+            return Text::_('PLG_VG_TRADING_COM_TRADING_NOT_EXIST');
+        }
         $html = "<h1>".Text::_('PLG_VG_TRADING_TECH_LOAD_POSITION_LABEL')."</h1>";
         $html .= '';
 		$app = Factory::getApplication();

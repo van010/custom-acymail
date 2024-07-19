@@ -16,6 +16,38 @@ class vgTradingTechHelper
 		// todo
 	}
 
+    /**
+     *
+     * @return bool
+     *
+     * @since version
+     */
+    public static function comTradingTechExisted()
+    {
+        $tradingAdminPath = JPATH_ROOT . '/administrator/components/com_tradingtechnologies';
+        $tradingSitePath = JPATH_ROOT . '/components/com_tradingtechnologies';
+        if (is_dir($tradingAdminPath) && is_dir($tradingSitePath)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @return bool
+     *
+     * @since version
+     */
+    public static function comAcymExisted()
+    {
+        $comAcymAdminPath = JPATH_ROOT . '/administrator/components/com_acym';
+        $comAcymSitePath = JPATH_ROOT . '/components/com_acym';
+        if (is_dir($comAcymAdminPath) && is_dir($comAcymSitePath)) {
+            return true;
+        }
+        return false;
+    }
+
 	public static function getParams($key)
 	{
 		$allParams = self::getPlgTradingAttrs()->params;
