@@ -22,7 +22,7 @@ class vgTradingTechHelper
 		if (empty($key)) {
 		    return $allParams;
 		}
-		return json_decode($allParams)->$key;
+		return isset(json_decode($allParams)->$key) ? json_decode($allParams)->$key : null;
 	}
 
 	public static function getTradingPositionAttrs()

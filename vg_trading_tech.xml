@@ -69,6 +69,13 @@
 				<field name="select_users_send_mail"
 					   type="selectUsersSendMail" label="PLG_VG_TRADING_TECH_SELECT_USER_SEND_MAIL"/>
 			</fieldset>
+
+			<fieldset addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_tradingtech"
+					  name="config_trading_labels"
+					  label="PLG_VG_TRADING_TECH_CONFIG_TRADING_LABEL">
+				<field name="select_trading_labels"
+					   type="selectTradingLabels" label="PLG_VG_TRADING_TECH_SELECT_TRADING_LABEL"/>
+			</fieldset>
 		</fields>
 	</config>
 </extension>

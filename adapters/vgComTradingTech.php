@@ -442,10 +442,9 @@ class vgComTradingTech
 			$value = "'$key'" . " => Text::_('MAP_$new'),";
 			echo '<pre style="color: red">';print_r($value);echo '</pre>';
 	    }*/
-
         $mapKeys = [
-            'portfolio_id' => Text::_('MAP_PORTFOLIO_ID'),
             'accountId' => Text::_('MAP_ACCOUNT_ID'),
+            'portfolio_id' => Text::_('MAP_PORTFOLIO_ID'),
             'instrumentId' => Text::_('MAP_INSTRUMENT_ID'),
             'avgBuy' => Text::_('MAP_AVERAGE_BUY'),
             'avgSell' => Text::_('MAP_AVERAGE_SELL'),
@@ -477,6 +476,19 @@ class vgComTradingTech
             'position_close' => Text::_('MAP_POSITION_CLOSE'),
         ];
 
+        if (empty($data)) return $mapKeys;
+
+        // map labels input from db with JText
+        $labelsFromDb = vgTradingTechHelper::getParams('select_trading_labels');
+        if (!empty($labelsFromDb)) {
+            $i = 0;
+            foreach ($mapKeys as $label => $value) {
+                if (empty($labelsFromDb[$i])) break;
+                $mapKeys[$label] = $labelsFromDb[$i];
+                $i++;
+            }
+        }
+
         foreach ($data as $key => $val) {
 			$newKey = $key;
             if (isset($mapKeys[$key])) {
@@ -489,6 +501,23 @@ class vgComTradingTech
         }
 
         return $data;
+    }
+
+    public static function mappingLabelsWithDb()
+    {
+        $labelsFromDb = vgTradingTechHelper::getParams('select_trading_labels');
+        $labelsFromJTex = self::mappingPositionsKey([]);
+        if (empty($labelsFromDb)) {
+            return $labelsFromJTex;
+        }
+        // parse label
+        $i = 0;
+        foreach ($labelsFromJTex as $label => $value) {
+            if (empty($labelsFromDb[$i])) break;
+            $labelsFromJTex[$label] = $labelsFromDb[$i];
+            $i++;
+        }
+        return $labelsFromJTex;
     }
 }
 
