@@ -243,8 +243,8 @@ class vgComTradingTech
         }
         if (!empty($data['position_open']) && !empty($data['position_close'])) return ;
         foreach ($data as $key => $tradeData) {
-            $sell = "Sell: " . $tradeData['avgSell'];
-            $buy = "Buy: " . $tradeData['avgBuy'];
+            $sell = isset($tradeData['avgSell']) ? "Sell: " . $tradeData['avgSell'] : '';
+            $buy = isset($tradeData['avgBuy']) ? "Buy: " . $tradeData['avgBuy'] : '';
             $data[$key]['position_open'] = $sell;
             $data[$key]['position_close'] = $sell;
             if ($tradeData['netPosition'] > 0) {

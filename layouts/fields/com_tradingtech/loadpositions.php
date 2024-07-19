@@ -54,7 +54,7 @@ class JFormFieldLoadPositions extends FormField
         $totalPositions = round(vgComTradingTech::loadPositions(true) / $pageLimit);
         $html = '<ul class="vg-position-pagination">';
         // $html .= '<li class="pag-prev" onclick="new vgApiHandling().loadPage(0, \'prev\', this)"><a href="#">&laquo;</a></li>';
-        $html .= '<li class="pag-prev"><a href="#">&laquo;</a></li>';
+        //$html .= '<li class="pag-prev"><a href="#">&laquo;</a></li>';
 		for ($i=0; $i<$totalPositions; $i++)
 		{
             $page = $i + 1;
@@ -71,7 +71,7 @@ class JFormFieldLoadPositions extends FormField
             }
         }
         // $html .= '<li class="pag-next" onclick="new vgApiHandling().loadPage(0, \'next\', this)"><a href="#">&raquo;</a></li>';
-        $html .= '<li class="pag-next"><a href="#">&raquo;</a></li>';
+        //$html .= '<li class="pag-next"><a href="#">&raquo;</a></li>';
         $html .= '</ul>';
         return $html;
 	}
