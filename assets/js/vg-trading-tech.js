@@ -66,7 +66,8 @@ function triggerSearchPosition(element){
 function triggerUpdateTtSignalMail(el, mailId, preview=true){
     currMailId = mailId;
     const openMailField = document.getElementById(`for-${el.id}`);
-    const closeMailPreview = document.getElementById(`close-mail-jform_params_load_acym_mail-${mailId}`);
+    const closeMailPreview = document.getElementById(`close-mail-${mailId}`);
+    console.log(mailId);
     const openMailPreview = document.getElementById(`open-mail-jform_params_load_acym_mail-${mailId}`);
     var allMailId = el.getAttribute('data-id');
 
@@ -91,7 +92,7 @@ function triggerUpdateTtSignalMail(el, mailId, preview=true){
         }
         for (let i = 0; i < allMailId.length; i++) {
             if (task === 'close') {
-                var closePreview = document.getElementById(`close-mail-jform_params_load_acym_mail-${allMailId[i]}`);
+                var closePreview = document.getElementById(`close-mail-${allMailId[i]}`);
                 if (!closePreview) return;
                 closePreview.style.display = 'none';
             }
