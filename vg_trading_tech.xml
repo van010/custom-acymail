@@ -52,7 +52,7 @@
 					<option value="insert_multiple_by_text_selected">PLG_VG_TRADING_TECH_INSERT_MULTIPLE_BY_SELECTED_TEXT</option>
 				</field>
 				<field name="select_positions" type="selectPositions" label="PLG_VG_TRADING_TECH_SELECT_POSITION_FIELDS"/>
-				<field name="exclude_positions" type="excludePositions" label="PLG_VG_TRADING_TECH_EXCLUDE_POSITION_FIELDS"/>
+				<!--<field name="exclude_positions" type="excludePositions" label="PLG_VG_TRADING_TECH_EXCLUDE_POSITION_FIELDS"/>-->
 			</fieldset>
 
 			<fieldset addfieldpath="/plugins/system/vg_trading_tech/layouts/fields/com_acym"
