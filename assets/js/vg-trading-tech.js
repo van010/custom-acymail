@@ -27,6 +27,7 @@ function vgTradingInit(){
     loadScript(handleApiPath, function (){
         console.log('load handleApiPath success!');
     });
+    hideSidebarSetting();
 }
 
 function loadScript(url, callback){
@@ -42,6 +43,48 @@ function loadScript(url, callback){
         }
     };
     document.head.appendChild(script);
+}
+
+function hideSidebarSetting() {
+    const idHide = 'jform_params_hide_sidebar0';
+    const idShow = 'jform_params_hide_sidebar1';
+
+    const mainTab = document.getElementById('general');
+    if (!mainTab) return;
+
+    const columnWrapper = mainTab.querySelector('div');
+    if (!columnWrapper) return;
+
+    const colSetting = columnWrapper.querySelector('div.col-lg-3');
+    const tradingContent = columnWrapper.querySelector('div.col-lg-9');
+    if (!colSetting || !tradingContent) return;
+
+    const labelHideSidebar = document.querySelector(`label[for="${idHide}"]`);
+    const labelShowSidebar = document.querySelector(`label[for="${idShow}"]`);
+    if (!labelHideSidebar || !labelShowSidebar) return;
+
+    const hideSidebar = () => {
+        colSetting.classList.remove('col-lg-3');
+        colSetting.style.display = 'none';
+        tradingContent.classList.remove('col-lg-9');
+        tradingContent.classList.add('col-lg-12');
+    };
+
+    const showSidebar = () => {
+        tradingContent.classList.remove('col-lg-12');
+        tradingContent.classList.add('col-lg-9');
+        colSetting.classList.add('col-lg-3');
+        colSetting.style.display = 'block';
+    };
+
+    if (document.getElementById(idHide).getAttribute('checked') === 'checked') {
+        hideSidebar();
+    } else {
+        showSidebar();
+    }
+
+    labelHideSidebar.addEventListener('click', hideSidebar);
+    labelShowSidebar.addEventListener('click', showSidebar);
 }
 
 //==========================================
