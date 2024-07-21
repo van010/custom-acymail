@@ -54,6 +54,7 @@
 	display: flex;
 	/*justify-content: center;*/
 	margin-bottom: 10px;
+	position: relative;
 }
 
 .vg-position-search-container input[type="text"] {
@@ -339,4 +340,35 @@
 .has-success .form-control-success:focus {
 	border-color: #28a745;
 	box-shadow: 0 0 5px rgba(40, 167, 69, 0.25);
+}
+
+.search-hint {
+    display: none; /* Hide by default */
+    position: absolute;
+    top: 40px; /* Adjust as needed */
+    left: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: max-content;
+    max-width: 300px;
+}
+
+.vg-position-search-container:hover .search-hint {
+    display: block; /* Show on hover */
+}
+
+.search-hint p {
+    margin: 5px 0;
+}
+
+.search-hint code {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
 }

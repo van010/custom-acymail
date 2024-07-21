@@ -28,6 +28,7 @@ function vgTradingInit(){
         console.log('load handleApiPath success!');
     });
     hideSidebarSetting();
+    handleSearchHint();
 }
 
 function loadScript(url, callback){
@@ -85,6 +86,23 @@ function hideSidebarSetting() {
 
     labelHideSidebar.addEventListener('click', hideSidebar);
     labelShowSidebar.addEventListener('click', showSidebar);
+}
+
+function handleSearchHint(){
+    const catIcon = document.querySelector('i.fa-cat');
+    const searchHint = document.querySelector('div.search-hint');
+
+    const showHint = () => {
+        searchHint.classList.add('vg-show-hint')
+    };
+
+    const hideHint = () => {
+        searchHint.classList.add('vg-hide-hint')
+    }
+
+    catIcon.addEventListener('mouseenter', function (){
+
+    })
 }
 
 //==========================================
