@@ -27,9 +27,7 @@ class vgTextHandling {
 	}
 
 	replaceMultiple(str, replacements) {
-		console.log(str);
 		for (let [oldStr, newStr] of Object.entries(replacements)) {
-			console.log(str.split(oldStr));
 			str = str.split(oldStr).join(newStr);
 		}
 		return str;

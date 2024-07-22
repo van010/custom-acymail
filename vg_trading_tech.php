@@ -62,7 +62,8 @@ class PlgSystemVg_trading_tech extends CMSPlugin
                 $res = vgComTradingTech::handlePagination($res, $pageNum);
                 break;
             case 'searchPosition':
-                vgComTradingTech::searchPosition('');
+                $data = $input->get('data', '[]', 'RAW');
+                $res = vgComTradingTech::searchPosition($res, json_decode($data));
                 break;
             case 'updateTtSignalMail':
 				$mailIds = $input->get('mailIds', [], 'RAW');

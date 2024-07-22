@@ -28,7 +28,6 @@ function vgTradingInit(){
         console.log('load handleApiPath success!');
     });
     hideSidebarSetting();
-    handleSearchHint();
 }
 
 function loadScript(url, callback){
@@ -88,23 +87,6 @@ function hideSidebarSetting() {
     labelShowSidebar.addEventListener('click', showSidebar);
 }
 
-function handleSearchHint(){
-    const catIcon = document.querySelector('i.fa-cat');
-    const searchHint = document.querySelector('div.search-hint');
-
-    const showHint = () => {
-        searchHint.classList.add('vg-show-hint')
-    };
-
-    const hideHint = () => {
-        searchHint.classList.add('vg-hide-hint')
-    }
-
-    catIcon.addEventListener('mouseenter', function (){
-
-    })
-}
-
 //==========================================
 // start user behavior
 //==========================================
@@ -118,10 +100,6 @@ function selectAllPositionAttrs(element, task){
             el.removeAttribute('checked');
         }
     });
-}
-
-function triggerSearchPosition(element){
-    console.log(element.value);
 }
 
 function triggerUpdateTtSignalMail(el, mailId, preview=true){
@@ -377,4 +355,9 @@ function reloadDataTblTrading(htmlData){
     const tbl_trading_wrapper = document.getElementById('tbl-trading-data');
     tbl_trading_wrapper.querySelector('table').remove();
     tbl_trading_wrapper.innerHTML = htmlData;
+}
+
+function reloadPagination(htmlPagination){
+    const paginationWrapper = document.getElementById('tbl-trading-pagination');
+    paginationWrapper.innerHTML = htmlPagination;
 }

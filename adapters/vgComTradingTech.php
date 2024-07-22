@@ -6,6 +6,8 @@ use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
+require_once JPATH_ROOT . '/plugins/system/vg_trading_tech/helper.php';
+
 class vgComTradingTech
 {
 	private static $tbl_tt_positions = '#__tt_positions';
@@ -184,7 +186,43 @@ class vgComTradingTech
 		return $html;
 	}
 
-    public static function handlePagination($res, $pageNum)
+    /**
+     * @param int $allPositions
+     *
+     * @return string
+     *
+     * @since version
+     */
+	public static function paginationTradingPositions($allPositions)
+	{
+		// vgComTradingTech::loadPositions(true)
+		$pageLimit = vgTradingTechHelper::getParams('limit_positions');
+        $totalPositions = round($allPositions / $pageLimit);
+        $html = '<ul class="vg-position-pagination">';
+        // $html .= '<li class="pag-prev" onclick="new vgApiHandling().loadPage(0, \'prev\', this)"><a href="#">&laquo;</a></li>';
+        //$html .= '<li class="pag-prev"><a href="#">&laquo;</a></li>';
+		for ($i=0; $i<$totalPositions; $i++)
+		{
+            $page = $i + 1;
+            $class = "page-$i";
+            if ($i === 0) {
+                $class .= ' active first';
+            } elseif ($i+1 == $totalPositions) {
+                $class .= ' last';
+            }
+            if ($i < 5 || in_array($i, [$totalPositions-1, $totalPositions-2, $totalPositions-3, $totalPositions-4, $totalPositions-5])) {
+                $html .= "<li class='$class' onclick='new vgApiHandling().loadPage($i, \"currPage\", this)' curr-page='{$i}'><a>$page</a></li>";  // directly reload in page
+            } elseif ($i == round($totalPositions/2)) {
+                $html .= "<li class='$class vg-position-pagination-dot' onclick='new vgApiHandling().loadPage($i, \"currPage\", this)' curr-page='{$i}'><a>. . .</a></li>";
+            }
+        }
+        // $html .= '<li class="pag-next" onclick="new vgApiHandling().loadPage(0, \'next\', this)"><a href="#">&raquo;</a></li>';
+        //$html .= '<li class="pag-next"><a href="#">&raquo;</a></li>';
+        $html .= '</ul>';
+        return $html;
+	}
+
+    public static function handlePagination($res, $pageNum, $condition='')
     {
 		require_once JPATH_ROOT . '/plugins/system/vg_trading_tech/helper.php';
 		$plgParams = json_decode(vgTradingTechHelper::getPlgTradingAttrs()->params);
@@ -196,36 +234,90 @@ class vgComTradingTech
         $columns = [$allColumns['tt_positions_str'] . ', ' .$allColumns['tt_instruments_str']];
 		$query->select($columns)
 			->from('`#__tt_positions` AS pos')
-            ->join('INNER', '`#__tt_instruments` AS ins ON ins.id = pos.instrumentId')
-			->order('pos.date DESC')
+            ->join('INNER', '`#__tt_instruments` AS ins ON ins.id = pos.instrumentId');
+		if (!empty($condition)) {
+			$query->where($condition);
+		}
+        $query->order('pos.date DESC')
 			->setLimit($limitPositions, $pageNum * $limitPositions);
 		$db->setQuery($query);
         $neededData = $db->loadAssocList();
         // parse position open and close
         $neededData = self::parsePositionOpenClose($neededData);
+//		echo '<pre style="color: red">';print_r($neededData);echo '</pre>';die;
 
         // load all association data between #__tt_positions and #__tt_instruments
         $query->clear();
         $query->select('pos.*, ins.*, ins.id AS instru_id, ins.modified AS instru_modified')
             ->from('`#__tt_positions` AS pos')
-            ->join('INNER', '`#__tt_instruments` AS ins ON ins.id = pos.instrumentId')
-            ->order('pos.date DESC')
+            ->join('INNER', '`#__tt_instruments` AS ins ON ins.id = pos.instrumentId');
+		if (!empty($condition)) {
+			$query->where($condition);
+		}
+        $query->order('pos.date DESC')
             ->setLimit($limitPositions, $pageNum * $limitPositions);
         $db->setQuery($query);
         $allPositionsData = $db->loadAssocList();
         // parse position open and close
         $allPositionsData = self::parsePositionOpenClose($allPositionsData);
 
+		// count all data with conditions
+		$query->clear();
+		$query->select('COUNT("pos.id")')
+			->from('`#__tt_positions` AS pos')
+            ->join('INNER', '`#__tt_instruments` AS ins ON ins.id = pos.instrumentId');
+		if (!empty($condition)) {
+			$query->where($condition);
+		}
+        $query->order('pos.date DESC');
+		$db->setQuery($query);
+		$numRows = $db->loadResult();
+
 	    $res['code'] = 200;
 	    $res['message'] = sprintf('Loading trading position at page %s success!', $pageNum);
 		$res['success'] = true;
 		$res['data']['html'] = self::showTableData($neededData, $allPositionsData, $pageNum);
+		$res['data']['numRows'] = $numRows;
 		return $res;
     }
 
-    public static function searchPosition($key)
+    /**
+     * @param array $res
+     * @param object $data
+     *
+     * @return array
+     *
+     * @since version
+     */
+    public static function searchPosition($res, $data)
     {
-	    return 1;
+		$db = Factory::getDbo();
+		$currentDate = date('Y-m-d');
+		$query = '';
+        $emptyRes = [
+            'code' => 201,
+            'message' => 'Date is Not a valid date format Y-m-d',
+            'success' => false,
+            'data' => ['html' => '<p>No records found!</p>']
+        ];
+		if (!empty($data->date_in )) {
+			$date = $data->date_in;
+			$dateFrom = explode(' ', $date)[0] ?? '';
+			$dateTo = explode(' ', $date)[1] ?? $currentDate;
+			if (empty($dateFrom) || !vgTradingTechHelper::isValidDate($dateFrom)
+				|| !vgTradingTechHelper::isValidDate($dateTo)) {
+				return $emptyRes;
+			}
+		    $query = "`date` BETWEEN " . $db->quote($dateFrom) . " AND " . $db->quote($dateTo);
+		} else if (!empty($data->date)) {
+			$date = $data->date;
+			if (!vgTradingTechHelper::isValidDate($date)) return $emptyRes;
+			$query = "`date` = " . $db->quote($date);
+		}
+		$tradingData = self::handlePagination($res, 0, $query);
+		$tradingData['data']['htmlPagination'] = self::paginationTradingPositions($tradingData['data']['numRows']);
+
+	    return $tradingData;
 	}
 
     /**

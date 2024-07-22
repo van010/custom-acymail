@@ -15,8 +15,44 @@ class vgApiHandling {
 		console.log('vgApiHandling loaded successfully!');
 	}
 
+	async searchPosition(element) {
+		const inputField = element.previousSibling;
+		if (!inputField) return;
+		const searchStr = inputField.value.trim();
+		const textHandle = new vgTextHandling();
+		if (!searchStr) return;
+		const data = {};
+		if (searchStr.includes('d:')) {
+			data.date = searchStr.replace('d:', '');
+		} else if (searchStr.includes('db:')) {
+			data.date_in = textHandle.replaceMultiple(searchStr, {'db:': '', '_': ' '});
+		}
+		showLoading();
+		const formData = new FormData();
+		formData.append('task', 'searchPosition');
+		formData.append('data', JSON.stringify(data));
+		try{
+		    const response = await fetch(this.joomlaApi, {
+				method: 'POST',
+				body: formData
+			});
+			const rawData = await response.json();
+			if (!rawData.success) {
+			    console.log(rawData.message);
+				return ;
+			}
+			const data = rawData.data[0];
+			if (data.code === 200) {
+				reloadDataTblTrading(data.data.html);
+				reloadPagination(data.data.htmlPagination);
+			}
+			hideLoading();
+		}catch(error){
+		    console.log(error);
+		}
+	}
+
 	async sendMailToUsers() {
-		console.log('sendMailToUsers');
 		const btnSendMail = document.getElementById('vg-send-mail');
 		btnSendMail.setAttribute('disabled', true);
 		btnSendMail.classList.add('disabled-button');
@@ -77,7 +113,50 @@ class vgApiHandling {
 		}
 	}
 
-	async loadPage(pageNumber, element) {
+	async loadPage(pageNumber, task, element) {
+		if (element.classList.contains('active')) {
+			return ;
+		}
+		let pageNum = 0;
+		const paginationWrapper = element.parentNode;
+		const currPageEl = paginationWrapper.querySelector('li.active');
+		if (currPageEl) {
+		    const currPage = parseInt(currPageEl.getAttribute('curr-page'));
+		}
+		const firstPageEl = paginationWrapper.querySelector('li.first');
+		if (firstPageEl) {
+			const firstPage = parseInt(firstPageEl.getAttribute('curr-page'));
+		}
+		const lastPageEl = paginationWrapper.querySelector('li.last');
+		if (lastPageEl) {
+			const lastPage = parseInt(paginationWrapper.querySelector('li.last').getAttribute('curr-page'));
+		}
+		switch (task) {
+			case 'currPage':
+				pageNum = pageNumber;
+				break;
+			case 'prev':
+				pageNum = currPage - 1;
+				if (currPage - 1 <= firstPage) {
+					pageNum = firstPage
+				} else {
+					pageNum = currPage - 1
+				}
+				break;
+			case 'next':
+				if (currPage + 1 >= lastPage) {
+				    pageNum = lastPage;
+				} else {
+					pageNum = currPage + 1;
+				}
+				break;
+			case '':
+			default:
+				pageNum = 0;
+				break;
+		}
+		console.log(`Load data for page: ${pageNum}`);
+		// this.reloadPagination(pageNum, task, firstPage, lastPage);
 		const pageWrapper = document.querySelector('ul.vg-position-pagination');
 		if (!pageWrapper) return;
 		pageWrapper.querySelectorAll('li').forEach(function (el, idx) {
@@ -90,7 +169,7 @@ class vgApiHandling {
 		// load
 		const formData = new FormData();
 		formData.append('task', 'pagination');
-		formData.append('pageNum', pageNumber);
+		formData.append('pageNum', pageNum);
 		try {
 			const response = await fetch(this.joomlaApi, {
 				method: 'POST',
@@ -102,7 +181,6 @@ class vgApiHandling {
 			}
 			const data = rawData.data[0];
 			reloadDataTblTrading(data.data.html);
-			console.log(data);
 			hideLoading();
 		} catch (error) {
 			console.log(error);
@@ -110,5 +188,44 @@ class vgApiHandling {
 		// complete ajax load data for page
 		// then load acymailing templates
 		// insert data from trading table to this form
+	}
+
+	reloadPagination (pageNum, task, firstPage, lastPage) {
+		const pageWrapper = document.querySelector('ul.vg-position-pagination');
+		if (!pageWrapper) return;
+		const allPages = pageWrapper.querySelectorAll('li');
+		const currPage = document.querySelector(`li.page-${pageNum}`);
+		if (currPage) {
+			allPages.forEach(function (el, idx) {
+				if (el.className.includes('active')) {
+					el.classList.remove('active');
+				}
+			});
+			currPage.classList.add('active');
+		} else {
+			if (task === 'next') {
+			    pageNum += 1;
+			} else {
+				pageNum -= 1;
+			}
+			if (pageNum === firstPage || pageNum === lastPage) {
+			    return ;
+			}
+			allPages.forEach(function (el, idx) {
+				if ([0, 1, allPages.length - 1, allPages.length - 2].includes(idx)) {
+					return;
+				}
+				const currP = parseInt(el.getAttribute('curr-page'));
+				const _class = `page-${pageNum + idx-3}`;
+				el.removeAttribute('onclick');
+				// el.className = '';
+				// el.classList.add(_class);
+				// el.classList.add('active');
+				el.setAttribute('onclick', `new vgApiHandling.loadPage(${pageNum + idx-3}, "currPage", this)`);
+				el.setAttribute('curr-page', pageNum + idx-3);
+				el.querySelector('a').innerText = '';
+				el.querySelector('a').innerText = pageNum + idx-3;
+			});
+		}
 	}
 }

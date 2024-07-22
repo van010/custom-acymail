@@ -142,7 +142,7 @@ class vgTradingTechHelper
      * get string query of position and instrument
      *
      * @param array $data
-     * @param boolean $tblPrefix
+     * @param boolean $tblPrefix9
      * @return mixed
      */
     public static function initGetAllCols($data, $tblPrefix)
@@ -221,6 +221,20 @@ class vgTradingTechHelper
             $allColumns[$key] = 'pos_' . $column;
         }
         return $allColumns;
+    }
+
+    /**
+     * @param string $date
+     * @param string $format
+     *
+     * @return bool
+     *
+     * @since version
+     */
+    public static function isValidDate($date, $format='Y-m-d')
+    {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) === $date;
     }
 }
 
