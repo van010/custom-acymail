@@ -45,6 +45,8 @@ class vgApiHandling {
 			if (data.code === 200) {
 				reloadDataTblTrading(data.data.html);
 				reloadPagination(data.data.htmlPagination);
+			} else {
+				alert(data.message);
 			}
 			hideLoading();
 		}catch(error){

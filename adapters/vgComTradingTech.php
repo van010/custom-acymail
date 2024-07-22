@@ -300,7 +300,12 @@ class vgComTradingTech
             'success' => false,
             'data' => ['html' => '<p>No records found!</p>']
         ];
-		if (!empty($data->date_in )) {
+
+        if (empty($data->date_in) && empty($data->date)) {
+            return $emptyRes;
+        }
+
+		if (!empty($data->date_in)) {
 			$date = $data->date_in;
 			$dateFrom = explode(' ', $date)[0] ?? '';
 			$dateTo = explode(' ', $date)[1] ?? $currentDate;
