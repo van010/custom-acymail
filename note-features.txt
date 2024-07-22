@@ -1,18 +1,18 @@
 1. In main view: plugin
 - show selection box for acym template,
 	let user can choose id:
-		+ show mail content
-		+ show mail preview.
+		✔+ show mail content
+		✔+ show mail preview.
 
 - Toggle status, access,...
 
 - trading positions implement:
-	+ search by id: reference clinpin3x
-	+ sort by date, id, price, v.v
+	✔+ search by id: reference clinpin3x
+	✔+ sort by date, id, price, v.v
 
-- choose any position row, insert directly into acym template
+✔- choose any position row, insert directly into acym template
 
-- click to send this template mail for a list with multiple receivers.
+✔- click to send this template mail for a list with multiple receivers.
 
 ✔- fix load total page
 
@@ -24,7 +24,7 @@
             -> save button:
             	update
             	save as new
-            - directly send mail into list of Users in user tab
+            ✔- directly send mail into list of Users in user tab
         + insert data from trading table to this form
             - create config: insert by short code or right after selection
                 ✔+ insert into blank template by pointer
@@ -38,6 +38,6 @@
 feature:
 	✔+ User selection check to send mail
 	✔+ exclude position fields when sending mail
-    + create a tab to show short code and let user config label
+    ✔+ create a tab to show short code and let user config label
 
 notes:

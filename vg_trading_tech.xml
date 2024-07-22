@@ -5,7 +5,7 @@
 	<creationDate>July 11th, 2024</creationDate>
 	<authorEmail>van.vanbac010@gmail.com</authorEmail>
 	<authorUrl>www.linkedin.com/in/van-hs-0a00511b2</authorUrl>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<description>Do some custom tasks for Trading Technologies component</description>
 	<files>
 		<filename plugin="vg_trading_tech">vg_trading_tech.php</filename>
