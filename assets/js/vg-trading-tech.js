@@ -314,6 +314,7 @@ function getEditorBody(){
 function showLoading(element){
     const tblOverlay = document.createElement('div');
 	const tblTrading = document.getElementById('tt-position-lists');
+    if (!tblTrading) return ;
 	tblOverlay.classList.add('table-overlay');
 	tblOverlay.style.display = 'block';
 	tblTrading.insertAdjacentElement('afterend', tblOverlay);
@@ -353,7 +354,6 @@ function hideLoading(){
 
 function reloadDataTblTrading(htmlData){
     const tbl_trading_wrapper = document.getElementById('tbl-trading-data');
-    tbl_trading_wrapper.querySelector('table').remove();
     tbl_trading_wrapper.innerHTML = htmlData;
 }
 

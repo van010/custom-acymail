@@ -16,8 +16,13 @@ class vgApiHandling {
 	}
 
 	async searchPosition(element) {
-		const inputField = element.previousSibling;
-		if (!inputField) return;
+		let inputField = null;
+		if (element.tagName.toLowerCase() === 'input') {
+			inputField = element;
+		} else {
+			inputField = element.previousSibling;
+			if (!inputField) return;
+		}
 		const searchStr = inputField.value.trim();
 		const textHandle = new vgTextHandling();
 		if (!searchStr) return;

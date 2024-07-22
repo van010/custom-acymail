@@ -372,3 +372,14 @@
     border-radius: 4px;
     font-family: monospace;
 }
+
+.no-records-found {
+    color: #dc3545; /* Bootstrap's danger color */
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    max-width: 400px;
+    margin: 20px auto; /* Center horizontally and add vertical margin */
+    font-family: Arial, sans-serif;
+}

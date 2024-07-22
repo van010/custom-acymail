@@ -11,6 +11,7 @@ require_once JPATH_ROOT . '/plugins/system/vg_trading_tech/helper.php';
 class vgComTradingTech
 {
 	private static $tbl_tt_positions = '#__tt_positions';
+    private static $noRecordsFound = '<p class="no-records-found">No records found!</p>';
 
     public function __construct()
     {
@@ -145,7 +146,7 @@ class vgComTradingTech
 	public static function showTableData($positions, $allPositionsData, $pageNum=0)
     {
 		if (empty($positions)) {
-		    return '';
+		    return self::$noRecordsFound;
 		}
 		$idxText = Text::_('Idx');
         $columnNames = array_keys($positions[0]);
@@ -298,7 +299,7 @@ class vgComTradingTech
             'code' => 201,
             'message' => 'Date is Not a valid date format Y-m-d',
             'success' => false,
-            'data' => ['html' => '<p>No records found!</p>']
+            'data' => ['html' => self::$noRecordsFound]
         ];
 
         if (empty($data->date_in) && empty($data->date)) {

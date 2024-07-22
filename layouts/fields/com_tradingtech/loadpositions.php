@@ -45,7 +45,7 @@ class JFormFieldLoadPositions extends FormField
 		$searchPlaceholderText = Text::_('PLG_VG_TRADING_TECH_POSITION_SEARCH_PLACEHOLDER');
         $searchHintText = Text::_('PLG_VG_TRADING_TECH_SEARCH_HINT');
 		$html = "<div class='vg-position-search-container'>";
-        $html .= "<input type='text' placeholder='$searchPlaceholderText' value=''>";
+        $html .= "<input type='text' onchange='new vgApiHandling().searchPosition(this)' placeholder='$searchPlaceholderText' value=''>";
 		$html .= "<button type='button' onclick='new vgApiHandling().searchPosition(this)'>$searchText</button>";
         $html .= "<div class='search-hint'>$searchHintText</div>";
 		$html .= "</div>";
