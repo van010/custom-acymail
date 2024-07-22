@@ -236,9 +236,9 @@ class vgComTradingTech
      */
 	public static function parsePositionOpenClose($data)
 	{
-        if (empty($data[0]['netPosition'])){
+        if (!isset($data[0]['netPosition'])){
             $app = Factory::getApplication();
-            $app->enqueueMessage('Please select option: <b>pos_netPosition</b> in tab <b>Select Trading Positions > Select Trading Attributes</b> to display position_close and position_open');
+            $app->enqueueMessage(Text::_('PLG_VG_TRADING_TECH_SELECT_NETPOSITION'));
             return $data;
         }
         if (!empty($data['position_open']) && !empty($data['position_close'])) return ;

@@ -57,10 +57,31 @@ class vgTradingTechHelper
 		return isset(json_decode($allParams)->$key) ? json_decode($allParams)->$key : null;
 	}
 
+    /**
+     * @return array
+     */
 	public static function getTradingPositionAttrs()
 	{
 		$allParams = self::getPlgTradingAttrs()->params;
-		return json_decode($allParams)->select_positions;
+
+        if (isset(json_decode($allParams)->select_positions)) {
+            return json_decode($allParams)->select_positions;
+        }
+
+        $columnsPositions = self::getColumnNames('#__tt_positions');
+        $columnsInstruments = self::getColumnNames('#__tt_instruments');
+        /*$columnsPositionsPrefix = array_map(function ($pos){
+            return "pos_$pos";
+        }, $columnsPositions);
+        $columnsInstrumentsPrefix = array_map(function ($instru){
+            return "instru_$instru";
+        }, $columnsInstruments);*/
+        $data = [
+            'all' => array_merge($columnsInstruments, $columnsPositions),
+            'tt_positions' => $columnsPositions,
+            'tt_instruments' => $columnsInstruments
+        ];
+        return $data;
 	}
 
     /**
@@ -70,6 +91,9 @@ class vgTradingTechHelper
     public static function getAllAssocTradingColumns($key='', $tblPrefix=true)
     {
         $allColumns = self::getTradingPositionAttrs();
+        if (isset($allColumns['all'])) {
+            return self::initGetAllCols($allColumns, $tblPrefix);
+        }
         $colData = [];
         $ttPositionsPrefix = 'pos_';
         $ttInstrumentPrefix = 'instru_';
@@ -114,16 +138,57 @@ class vgTradingTechHelper
         return $colData;
     }
 
+    /**
+     * get string query of position and instrument
+     *
+     * @param array $data
+     * @param boolean $tblPrefix
+     * @return mixed
+     */
+    public static function initGetAllCols($data, $tblPrefix)
+    {
+        $data['tt_instruments_str'] = array_map(function ($instru) use ($tblPrefix){
+            $asIns = '';
+            if ($instru === 'id' || $instru === 'modified') {
+                $asIns = 'AS instru_' . $instru;
+            }
+            if ($tblPrefix) {
+                return self::$instrumentTblPrefix . ".`$instru` $asIns, ";
+            } else {
+                return "`$instru`, ";
+            }
+        }, $data['tt_instruments']);
+        $data['tt_instruments_str'] = rtrim(trim(implode('', $data['tt_instruments_str'])), ',');
+
+        $data['tt_positions_str'] = array_map(function ($pos) use ($tblPrefix){
+            if ($tblPrefix) {
+                return self::$positionsTblPrefix . ".`$pos`, ";
+            } else {
+                return "`$pos`, ";
+            }
+        }, $data['tt_positions']);
+        $data['tt_positions_str'] = rtrim(trim(implode('', $data['tt_positions_str'])), ',');
+        return $data;
+    }
+
+    /**
+     * @return array|mixed
+     */
 	public static function getPlgTradingAttrs()
 	{
 		$allAttrs = PluginHelper::getPlugin('system', 'vg_trading_tech');
 		return $allAttrs;
 	}
 
+    /**
+     * get all column names of the table
+     *
+     * @param $tblName
+     * @return array|mixed
+     */
 	public static function getColumnNames($tblName)
 	{
 		$db = Factory::getDbo();
-		$query = $db->getQuery(true);
 		$queryColumns = "show columns from `$tblName`";
 		$db->setQuery($queryColumns);
 		$columns = $db->loadColumn();
