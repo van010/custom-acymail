@@ -27,7 +27,7 @@
 <!--				<field name="hide_sidebar" type=""/>-->
 				<field name="hide_sidebar" type="radio"
 					   class="btn-group btn-group-yesno"
-					   default="1" label="PLG_VG_TRADING_HIDE_SIDEBAR_SETTING"
+					   default="0" label="PLG_VG_TRADING_HIDE_SIDEBAR_SETTING"
 					   description="SHOW_READMORE_OR_NOT">
 					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>

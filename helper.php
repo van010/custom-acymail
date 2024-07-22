@@ -176,8 +176,19 @@ class vgTradingTechHelper
      */
 	public static function getPlgTradingAttrs()
 	{
-		$allAttrs = PluginHelper::getPlugin('system', 'vg_trading_tech');
-		return $allAttrs;
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('extension_id AS id, element AS name, type, params')
+            ->from('`#__extensions`')
+            ->where('`type` = "plugin"')
+            ->where('`element` = ' . $db->quote('vg_trading_tech'));
+        $db->setQuery($query);
+
+        if (empty(PluginHelper::getPlugin('system', 'vg_trading_tech'))) {
+            return $db->loadObject();
+        }
+
+		return PluginHelper::getPlugin('system', 'vg_trading_tech');
 	}
 
     /**
