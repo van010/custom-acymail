@@ -7,6 +7,8 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
 
+require_once JPATH_ROOT . '/plugins/system/vg_trading_tech/helper.php';
+
 class JFormFieldLoadPositions extends FormField
 {
     public $type = 'loadPositions';
