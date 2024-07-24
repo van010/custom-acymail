@@ -28,6 +28,14 @@ function vgTradingInit(){
         console.log('load handleApiPath success!');
     });
     hideSidebarSetting();
+    setTradingTblStyle();
+}
+
+function setTradingTblStyle(){
+    const tradingTbl = document.getElementById('tbl-trading-data');
+    if (!tradingTbl) return;
+    const tradingTblWrapper = tradingTbl.parentNode;
+    tradingTblWrapper.style.overflow = 'auto';
 }
 
 function loadScript(url, callback){

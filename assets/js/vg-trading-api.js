@@ -8,7 +8,7 @@ class vgApiHandling {
 	constructor() {
 		// todo
 		this.baseUrl = Joomla.getOptions('system.paths');
-		this.joomlaApi = this.baseUrl.base + '/index.php?option=com_ajax&plugin=vg_trading_tech&format=json&group=system';
+		this.joomlaApi = this.baseUrl.base + '/index.php?option=com_ajax&plugin=Vg_trading_tech&format=json&group=system';
 	}
 
 	runTest (){
