@@ -330,21 +330,27 @@ function showLoading(element){
 }
 
 function showUpdateMailMsg(class_, text, code){
-    const msg = $(`p.${class_}`);
+    let msg = null;
+    msg = $(`.${class_}`);
+    if ($(`.${class_}`).length === 0) {
+        msg = $(`#${class_}`);
+    }
+
     if (!msg) {
         console.log(`No tag p.${class_} found!`);
         return;
     }
-    msg.text(text)
+    msg.html(text)
     if (code !== 200) {
         msg.removeClass('msg-success');
         msg.addClass('msg-fail');
+        msg.css('color', 'red');
     } else {
         msg.removeClass('msg-fail');
         msg.addClass('msg-success');
     }
     msg.css('display', 'block');
-    msg.fadeOut(2500, 'swing');
+    msg.fadeOut(9000, 'swing');
 }
 
 function showSendMailSuccess(htmlText){

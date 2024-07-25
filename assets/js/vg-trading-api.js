@@ -75,12 +75,13 @@ class vgApiHandling {
 			});
 			const rawData = await response.json();
 			if (!rawData.success) {
+				showUpdateMailMsg('send-mail-success', rawData.message, 201);
 				console.log(rawData.message);
 			    return ;
 			}
 			const data = rawData.data[0];
 			if (data.code === 200) {
-			    showSendMailSuccess(data.message);
+				showUpdateMailMsg('send-mail-success', data.message, 200);
 				btnSendMail.removeAttribute('disabled');
 				btnSendMail.classList.remove('disabled-button');
 			}
