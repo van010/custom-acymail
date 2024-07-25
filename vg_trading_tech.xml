@@ -53,7 +53,7 @@
 					  name="config_trading_positions"
 					  label="PLG_VG_TRADING_TECH_CONFIG_POSITIONS_NAME">
 				<field name="limit_positions" type="text" label="PLG_VG_TRADING_TECH_LIMIT_POSITION" default="5"/>
-				<field name="insert_position_by" type="list" default="insert_multiple_by_pointer" label="PLG_VG_TRADING_TECH_INSERT_LABEL">
+				<field name="insert_position_by" type="list" default="insert_one_by_shortcode_key_value" label="PLG_VG_TRADING_TECH_INSERT_LABEL">
 					<option value="insert_one_by_shortcode_value">PLG_VG_TRADING_TECH_INSERT_ONE_BY_SHORT_CODE_WITH_VALUE</option>
 					<option value="insert_one_by_shortcode_key_value">PLG_VG_TRADING_TECH_INSERT_ONE_BY_SHORT_CODE_WITH_KEY_VALUE</option>
 					<option value="insert_multiple_by_pointer">PLG_VG_TRADING_TECH_INSERT_MULTIPLE_BY_POINTER</option>
