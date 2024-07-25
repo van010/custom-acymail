@@ -383,3 +383,7 @@
     margin: 20px auto; /* Center horizontally and add vertical margin */
     font-family: Arial, sans-serif;
 }
+
+.label-shortcode label, #all-sample-shortcode{
+	cursor: copy;
+}

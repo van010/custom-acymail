@@ -27,6 +27,7 @@ function vgTradingInit(){
     loadScript(handleApiPath, function (){
         console.log('load handleApiPath success!');
     });
+    copyShortCode();
     hideSidebarSetting();
     setTradingTblStyle();
 }
@@ -373,3 +374,35 @@ function reloadPagination(htmlPagination){
     const paginationWrapper = document.getElementById('tbl-trading-pagination');
     paginationWrapper.innerHTML = htmlPagination;
 }
+
+function copyShortCode(){
+    const labelsWrapper = document.querySelector('div.label-shortcode');
+    if (!labelsWrapper) return;
+    let allShortcode = '';
+    labelsWrapper.querySelectorAll('label').forEach(function (el, idx){
+        if (idx === 0) {
+            return ;
+        }
+        var shortcodeText = el.innerText.trim();
+        shortcodeText = `{${shortcodeText}}`;
+        allShortcode += `${shortcodeText}<br>`;
+        el.addEventListener('click', function (e){
+            navigator.clipboard.writeText(shortcodeText);
+            alert(`Copied ${shortcodeText} to clipboard!`);
+        });
+    })
+    const sampleAllShortcode = document.createElement("p");
+    sampleAllShortcode.id = 'all-sample-shortcode';
+    sampleAllShortcode.innerHTML = allShortcode;
+    labelsWrapper.insertAdjacentElement('afterend', sampleAllShortcode);
+    sampleAllShortcode.addEventListener('click', function (){
+        navigator.clipboard.writeText(allShortcode);
+        alert(`Copied ${allShortcode} to clipboard!`);
+    })
+}
+
+
+
+
+
+

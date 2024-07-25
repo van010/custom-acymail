@@ -40,6 +40,10 @@ class JFormFieldSelectTradingLabels extends FormField
         }
         $html .= "</div>";
         $html .= "</fieldset>";
+        /*$script = "<script type='text/javascript'>
+            copyShortCode();
+        </script>";
+        $html .= $script;*/
         return $html;
     }
 }
