@@ -232,7 +232,7 @@ class vgComTradingTech
         $query = $db->getQuery(true);
         // $columns = vgTradingTechHelper::getTradingPositionAttrs();
         $allColumns = vgTradingTechHelper::getAllAssocTradingColumns();
-        $columns = [$allColumns['tt_positions_str'] . ', ' .$allColumns['tt_instruments_str']];
+        $columns = [rtrim(trim($allColumns['tt_positions_str'] . ', ' .$allColumns['tt_instruments_str']), ',')];
 		$query->select($columns)
 			->from('`#__tt_positions` AS pos')
             ->join('INNER', '`#__tt_instruments` AS ins ON ins.id = pos.instrumentId');

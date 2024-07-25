@@ -95,6 +95,8 @@ class vgTradingTechHelper
             return self::initGetAllCols($allColumns, $tblPrefix);
         }
         $colData = [];
+        $colData['tt_positions'] = [];
+        $colData['tt_instruments'] = [];
         $ttPositionsPrefix = 'pos_';
         $ttInstrumentPrefix = 'instru_';
         $ttPositionStr = '';
