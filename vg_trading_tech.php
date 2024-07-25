@@ -29,11 +29,11 @@ class PlgSystemVg_trading_tech extends CMSPlugin
 
         vgComTradingTech::updateUsersSendMail($params->select_users_send_mail);
 
-        $mailContent = $params->preview_acym_mail_templates;
+        /*$mailContent = $params->preview_acym_mail_templates;
         if (!empty($mailContent)) {
             $mailId = 1;
             vgComAcym::updateAcymMailContent($mailId, $mailContent);
-        }
+        }*/
     }
 
     public static function onExtensionAfterSave($context, $tbl, $is_new)
@@ -68,6 +68,11 @@ class PlgSystemVg_trading_tech extends CMSPlugin
             case 'updateTtSignalMail':
 				$mailIds = $input->get('mailIds', [], 'RAW');
                 $res = vgComAcym::updateTtSignalMail($res, json_decode($mailIds));
+                break;
+            case 'updateAcymMailContent':
+                $mailId = $input->get('mailId', '');
+                $mailContent = $input->get('mailContent', '', 'RAW');
+                $res = vgComAcym::updateAcymMailContent($res, $mailId, $mailContent);
                 break;
             case 'sendMail':
                 $mailBody = $input->get('mailBody', '', 'RAW');

@@ -114,9 +114,40 @@ class vgApiHandling {
 				return;
 			}
 			const data = rawData.data[0];
-			showUpdateMailMsg(data.message, data.code);
+			showUpdateMailMsg('update-mail-msg', data.message, data.code);
 		} catch (error) {
 			console.log(error);
+		}
+	}
+
+	async updateAcymMailContent(){
+		let acymMailContent = '';
+		const editorContent = getEditorBody();
+		// const mailTemplateContent = editorContent.querySelector('div#acym__wysid__template');
+		const mailEditorContent = editorContent.innerHTML;
+		acymMailContent = mailEditorContent;
+		if (!acymMailContent || !currMailId) {
+			console.log('No content in editor or Mail Id. Cancel task: acym mail update!');
+			return ;
+		}
+		const formData = new FormData();
+		formData.append('mailId', currMailId);
+		formData.append('mailContent', acymMailContent);
+		formData.append('task', 'updateAcymMailContent');
+		try{
+		    const response = await fetch(this.joomlaApi, {
+				method: 'POST',
+				body: formData
+			});
+			const rawData = await response.json();
+			if (!rawData.success) {
+			    console.log(rawData.message);
+				return ;
+			}
+			const data = rawData.data[0];
+			showUpdateMailMsg('update-acym-mail-msg', data.message, data.code)
+		}catch(error){
+		    console.log(error);
 		}
 	}
 

@@ -328,8 +328,12 @@ function showLoading(element){
 	tblTrading.insertAdjacentElement('afterend', tblOverlay);
 }
 
-function showUpdateMailMsg(text, code){
-    const msg = $('p.update-mail-msg');
+function showUpdateMailMsg(class_, text, code){
+    const msg = $(`p.${class_}`);
+    if (!msg) {
+        console.log(`No tag p.${class_} found!`);
+        return;
+    }
     msg.text(text)
     if (code !== 200) {
         msg.removeClass('msg-success');

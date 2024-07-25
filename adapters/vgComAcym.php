@@ -2,7 +2,6 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use AcyMailing\Helpers\MailerHelper;
 
 defined('_JEXEC') or die;
 
@@ -13,9 +12,30 @@ class vgComAcym
 		// todo
 	}
 
-    public static function updateAcymMailContent($mailId, $mailContent)
+    /**
+     * @param array $res
+     * @param int $mailId
+     * @param string $mailContent
+     * @return mixed
+     */
+    public static function updateAcymMailContent($res, $mailId, $mailContent)
     {
-        
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+        $fields = [
+            '`body` = '. $db->quote($mailContent)
+        ];
+        $query->update('#__acym_mail')
+            ->set($fields)
+            ->where('`id` = ' . $db->quote($mailId));
+        $db->setQuery($query);
+        if ($db->execute()) {
+            $res['message'] = "Update mail content success: mail_id = $mailId";
+            return $res;
+        }
+        $res['code'] = 201;
+        $res['message'] = 'Update mail content failed!';
+        return $res;
     }
 
     /**

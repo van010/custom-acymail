@@ -20,6 +20,13 @@ class JFormFieldSelectTradingLabels extends FormField
         $name = $this->name;
         $text = strtoupper(Text::_('PLG_VG_TRADING_TECH_LABEL_SHORTCODE_NAME'));
         $labels = vgComTradingTech::mappingLabelsWithDb();
+
+        /*$shortCodeText = array_map(function ($label){
+            return '{' . $label . '}';
+        }, array_keys($labels));
+        echo implode('<br>', $shortCodeText);
+        die('123');*/
+
         $html .= "<fieldset name='$name' id='$id'>";
         $html .= "<div class='label-shortcode'>";
         $html .= "<label class='shortcode-name'>{$text}</label>";
