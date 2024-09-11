@@ -570,8 +570,10 @@ class vgComTradingTech
             'instru_modified' => Text::_('MAP_INSTRUMENT_DATE_MODIFIED'),
             'instrument_link' => Text::_('MAP_INSTRUMENT_LINK'),
             'created' => Text::_('MAP_INSTRUMENT_DATE_CREATED'),
-            'position_open' => Text::_('MAP_POSITION_OPEN'),
-            'position_close' => Text::_('MAP_POSITION_CLOSE'),
+            /*'position_open' => Text::_('MAP_POSITION_OPEN'),
+            'position_close' => Text::_('MAP_POSITION_CLOSE'),*/
+            'position_open' => '',
+            'position_close' => '',
         ];
 
         if (empty($data)) return $mapKeys;

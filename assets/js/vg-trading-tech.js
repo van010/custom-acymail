@@ -257,7 +257,11 @@ function insertOneByShortCode(editor, data, task){
                 if (task === 'insert_one_by_shortcode_value') {
                     var strContent = `${colVal}`;
                 } else {
-                    strContent = `${colName}: ${colVal}`;
+                    if (!colName) {
+                        strContent = `${colVal}`;
+                    } else {
+                        strContent = `${colName}: ${colVal}`;
+                    }
                 }
                 const htmlContent = `<p>${colName}: ${colVal}</p>`;
                 content += htmlContent;
