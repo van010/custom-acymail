@@ -26,9 +26,11 @@ class JFormFieldJapanel extends FormField
 	    $doc->addStyleSheet(Uri::root(true) . '/plugins/system/vg_trading_tech/assets/style/vg-trading-tech.css');
         $jsHandleText = Uri::root(true) . '/plugins/system/vg_trading_tech/assets/js/vg-trading-text.js';
 		$jsHandleApi = Uri::root(true) . '/plugins/system/vg_trading_tech/assets/js/vg-trading-api.js';
+        $jsHandleInsertValues = Uri::root(true) . '/plugins/system/vg_trading_tech/assets/js/vg-trading-insertValues.js';
         $scripts = "
             const handleTextPath = '$jsHandleText';
             const handleApiPath = '$jsHandleApi';
+            const handleInsertValues = '$jsHandleInsertValues';
         ";
         $doc->addScriptDeclaration($scripts);
     }
