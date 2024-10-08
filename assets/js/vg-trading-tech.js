@@ -21,12 +21,12 @@ function vgTradingInit(){
     const acymTemplatePreview = document.getElementById('jform_params_preview_acym_mail_templates-lbl');
     trading_data_label.parentElement.remove();
     acymTemplatePreview.parentElement.remove();
-    loadScript(handleTextPath, function (){
-        console.log('load handleTextPath success!');
-    });
-    loadScript(handleApiPath, function (){
-        console.log('load handleApiPath success!');
-    });
+    const scripts = [handleTextPath, handleApiPath, handleInsertValues];
+    for (var i = 0; i < scripts.length; i++) {
+        loadScript(scripts[i], function (){
+            console.log('Load script success!');
+        });
+    }
     copyShortCode();
     hideSidebarSetting();
     setTradingTblStyle();
@@ -99,6 +99,11 @@ function hideSidebarSetting() {
 //==========================================
 // start user behavior
 //==========================================
+class vgUserBehaviors {
+    constructor() {
+        // todo
+    }
+}
 function selectAllPositionAttrs(element, task){
     const fieldPositions = document.getElementById(element.getAttribute('data-for').trim());
     if (!fieldPositions) return;
@@ -163,6 +168,7 @@ function changePosition(tagName, mapKeys, allDataMapKeys, insertPositionBy, elem
 
     const htmlData = parsePositionData(mapKeys);
     let textHandling = new vgTextHandling();
+    let insertValues = new VgInsertValues();
     const htmlEditor = getEditorBody();
     const rawContent = htmlEditor.innerHTML;
     const shortCode = textHandling.extractStrings(rawContent);
@@ -177,16 +183,16 @@ function changePosition(tagName, mapKeys, allDataMapKeys, insertPositionBy, elem
 
     switch (insertPositionBy) {
         case 'insert_multiple_by_pointer':
-            insertMultipleByPointer(editor, 'pointer', htmlData);
+            insertValues.insertMultipleByPointer(editor, 'pointer', htmlData);
             break;
         case 'insert_multiple_by_text_selected':
-            insertMultipleByPointer(editor, 'text_selected', htmlData);
+            insertValues.insertMultipleByPointer(editor, 'text_selected', htmlData);
             break;
         case 'insert_one_by_shortcode_value':
-            insertOneByShortCode(editor, data, insertPositionBy);
+            insertValues.insertOneByShortCode(editor, data, insertPositionBy);
             break;
         case 'insert_one_by_shortcode_key_value':
-            insertOneByShortCode(editor, data, insertPositionBy);
+            insertValues.insertOneByShortCode(editor, data, insertPositionBy);
             break;
         case '':
         default:
@@ -201,86 +207,6 @@ function changePosition(tagName, mapKeys, allDataMapKeys, insertPositionBy, elem
 //==========================================
 // start communicating with JCE Editor
 //==========================================
-function insertMultipleByPointer(editor, task, positionData){
-    // const strPositionData = JSON.stringify(positionData);
-    const strPositionData = positionData.innerHTML;
-    const position = editor.selection.getRng();
-	const selectedContent = editor.selection.getContent();
-	const startPos = position.startOffset;
-	const endPos = position.endOffset;
-    let newContent = '';
-    if (task === 'pointer') {
-        newContent = selectedContent + strPositionData;
-    } else if (task === 'text_selected') {
-        newContent = strPositionData;
-    } else {
-        alert(`Task ${task} not found.`);
-        return ;
-    }
-    editor.selection.setContent(newContent);
-    editor.undoManager.add();
-}
-
-function insertOneByShortCode(editor, data, task){
-    const shortCode = data.short_code;
-
-    // if (shortCode.length === 0 || insertedShortCode) {
-    if (shortCode.length === 0) {
-        alert('Reload to insert again!');
-        return;
-    }
-
-    let content = '';
-    let shortCodeData = {};
-    const bodyEditor = getEditorBody();
-    const rawContent = data.raw_content;
-    const allDataMapKeys = data.all_data_map_keys;
-
-    for (const property in shortCode){
-        const data = allDataMapKeys[shortCode[property]];
-        const a = '{'+shortCode[property]+'}';
-        if (allDataMapKeys[shortCode[property]]) {
-            const colVal = data.val;
-            const colName = data.key;
-            if (shortCode[property].includes('link')) {
-                const link = `${colName}: <a style="color: #007CD2FF" href="${colVal}">${colVal}</a>`;
-                if (task === 'insert_one_by_shortcode_value') {
-                    var strLink = `${colVal}`;
-                } else {
-                    strLink = link;
-                }
-                // const strLink = `<p>${colVal}</p>`;
-                content += link;
-                shortCodeData[a] = strLink;
-            } else {
-                // const strContent = `<p>${colVal}</p>`;
-                if (task === 'insert_one_by_shortcode_value') {
-                    var strContent = `${colVal}`;
-                } else {
-                    if (!colName) {
-                        strContent = `${colVal}`;
-                    } else {
-                        strContent = `${colName}: ${colVal}`;
-                    }
-                }
-                const htmlContent = `<p>${colName}: ${colVal}</p>`;
-                content += htmlContent;
-                shortCodeData[a] = strContent;
-            }
-        } else {
-            content += '<p>{' + shortCode[property] + '}</p>';
-            // shortCodeData[a] = '<p>{' + shortCode[property] + '}</p>';
-            shortCodeData[a] = '{' + shortCode[property] + '}';
-        }
-    }
-    let textHandling = new vgTextHandling();
-    // const newContent = textHandling.replaceMultiple(rawShortCode, shortCodeData);
-    const newContent = textHandling.replacePlaceholders(rawContent, shortCodeData);
-    if (!bodyEditor) return ;
-    // bodyEditor.innerHTML = content;
-    bodyEditor.innerHTML = newContent;
-    // insertedShortCode = true;
-}
 
 function parsePositionData(mapKeys){
     if (typeof mapKeys === 'string') {
@@ -410,9 +336,3 @@ function copyShortCode(){
         alert(`Copied ${allShortcode} to clipboard!`);
     })
 }
-
-
-
-
-
-
