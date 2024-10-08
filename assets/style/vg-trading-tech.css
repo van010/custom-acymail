@@ -387,3 +387,8 @@
 .label-shortcode label, #all-sample-shortcode{
 	cursor: copy;
 }
+
+.vg-editor {
+	display: flex;
+	gap: 15px;
+}

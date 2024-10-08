@@ -33,6 +33,9 @@ class JFormFieldAcymMailPreview extends FormField
         $html .= "</div>";
 		$html .= "<div class='vg-editor'>";
 		$html .= $editor->embedContentToEditor($this->name, $content);
+        $html .= "<div class='content-select-shortcode'>";
+        $html .= vgComTradingTech::embedTradingPositionsToEditor('embed', $this->name);
+		$html .= "</div>";
 		$html .= "</div>";
 		return $html;
 	}

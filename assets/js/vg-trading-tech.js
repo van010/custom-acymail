@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', function (){
     if (inputMailId) {
         currMailId = inputMailId.value;
     }
+    setTimeout(function (){
+        getEditorBody().focus();
+    }, 1500);
+    contentInsertShortcode('jform_params_embed_positions');
 });
 
 var $ = jQuery;
@@ -104,8 +108,34 @@ class vgUserBehaviors {
         // todo
     }
 }
+
+function contentInsertShortcode(elId) {
+    const fieldPositions = document.getElementById(elId);
+    if (!fieldPositions) return;
+
+    fieldPositions.querySelectorAll('input').forEach(function (el, idx) {
+        el.addEventListener('click', function () {
+            const editor = tinymce.get("acym_mail_preview_editor");
+            const position = editor.selection.getRng();
+            let newContent = '';
+
+            if (el.checked) { // insert shortcode into editor
+                newContent = '<p>' + el.value + '</p>';
+            } else { // remove data from editor
+                const editorBody = getEditorBody();
+                const editorContent = editorBody.innerHTML;
+                newContent_ = editorContent.replace(el.value, '');
+                editorBody.innerHTML = newContent_;
+            }
+            editor.selection.setContent(newContent);
+            editor.undoManager.add();
+        });
+    });
+}
+
 function selectAllPositionAttrs(element, task){
-    const fieldPositions = document.getElementById(element.getAttribute('data-for').trim());
+    const dataFor = element.getAttribute('data-for').trim();
+    const fieldPositions = document.getElementById(dataFor);
     if (!fieldPositions) return;
     fieldPositions.querySelectorAll('input').forEach(function (el, idx){
         if (task) {
@@ -114,6 +144,26 @@ function selectAllPositionAttrs(element, task){
             el.removeAttribute('checked');
         }
     });
+
+    function getAllInputValues(fieldset){
+        const input = fieldset.querySelectorAll('input[type="checkbox"]');
+        const values = [];
+        input.forEach(function (el, idx){
+            const shortCode = '<p>' + el.value + '</p>';
+            values.push(shortCode);
+        });
+        return values;
+    }
+
+    let contentShortcode = '';
+    const editor = tinymce.get('acym_mail_preview_editor');
+    const positionValues = getAllInputValues(fieldPositions);
+    contentShortcode = positionValues.join('\r\n');
+
+    if (dataFor === 'jform_params_embed_positions' && task == 1) {
+        editor.selection.setContent(contentShortcode);
+        editor.undoManager.add();
+    }
 }
 
 function triggerUpdateTtSignalMail(el, mailId, preview=true){
@@ -315,11 +365,13 @@ function copyShortCode(){
     const labelsWrapper = document.querySelector('div.label-shortcode');
     if (!labelsWrapper) return;
     let allShortcode = '';
+    // let test = '';
     labelsWrapper.querySelectorAll('label').forEach(function (el, idx){
         if (idx === 0) {
             return ;
         }
         var shortcodeText = el.innerText.trim();
+        // test += `'${shortcodeText}' => '{${shortcodeText}}',`;
         shortcodeText = `{${shortcodeText}}`;
         allShortcode += `${shortcodeText}<br>`;
         el.addEventListener('click', function (e){

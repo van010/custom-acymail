@@ -174,6 +174,33 @@
     </div>
     <div class="label-shortcode-avgBuy"><label for="avgBuy">avgBuy</label><input type="text" id="avgBuy"
 </div>
+</div>
+
+<fieldset name="jform[params][preview_acym_mail_templates]" id="jform_params_embed_positions" class="checkboxes">
+    <button class="btn-attrs-all" type="button" data-for="jform_params_embed_positions"
+            onclick="selectAllPositionAttrs(this, 1)">Select All Attributes
+    </button>
+    <button class="btn-attrs-none" type="button" data-for="jform_params_embed_positions"
+            onclick="selectAllPositionAttrs(this, 0)">None
+    </button>
+    <div class="form-check form-check-inline"><input type="checkbox" class="form-check-input"
+                                                     id="jform_params_embed_positions-avgBuy"
+                                                     name="jform[params][embed_positions][]" value="{avgBuy}"
+                                                     checked="true"><label for="jform_params_embed_positions-avgBuy"
+                                                                           class="form-check-label">avgBuy</label></div>
+    <div class="form-check form-check-inline"><input type="checkbox" class="form-check-input"
+                                                     id="jform_params_embed_positions-avgSell"
+                                                     name="jform[params][embed_positions][]" value="{avgSell}"
+                                                     checked="true"><label for="jform_params_embed_positions-avgSell"
+                                                                           class="form-check-label">avgSell</label>
+    </div>
+    <div class="form-check form-check-inline"><input type="checkbox" class="form-check-input"
+                                                     id="jform_params_embed_positions-netPosition"
+                                                     name="jform[params][embed_positions][]" value="{netPosition}"
+                                                     checked="true"><label
+            for="jform_params_embed_positions-netPosition" class="form-check-label">netPosition</label></div>
+</fieldset>
+
 <!--form type checkboxes
 <div class="form-check form-check-inline">
 <input type="checkbox" id="jform_params_toppings0" name="jform[params][toppings][]" value="anch" checked="" class="form-check-input">

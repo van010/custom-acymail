@@ -108,9 +108,14 @@ class vgComTradingTech
         $textSelectNone = Text::_('PLG_VG_TRADING_TECH_SELECT_NONE_POSITION_ATTRS');
         $plgTradingAttrs = vgTradingTechHelper::getPlgTradingAttrs();
         $plgTradingParams = json_decode($plgTradingAttrs->params);
-        $position_column_names = vgTradingTechHelper::getTradingPositionsColumnNames(true);
+        /*$position_column_names = vgTradingTechHelper::getTradingPositionsColumnNames(true);
 		$instrument_column_names = vgTradingTechHelper::getInstrumentColumnNames(true);
-		$allColumns = array_merge($position_column_names, $instrument_column_names);
+		$allColumns = array_merge($position_column_names, $instrument_column_names);*/
+
+        $allColumns = [
+            'pos_avgBuy', 'pos_avgSell', 'pos_netPosition', 'instru_productName', 'instru_instrument_link'
+        ];
+
         $html = "<fieldset name='$name' id='$fieldsetId' class='checkboxes'>";
 		$html .= "<button class='btn-attrs-all' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 1)'>$textSelectAll</button>";
 		$html .= "<button class='btn-attrs-none' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 0)'>$textSelectNone</button><br>";
@@ -134,6 +139,63 @@ class vgComTradingTech
 		}
 		$html .= '</fieldset>';
         return $html;
+    }
+
+    public static function embedTradingPositionsToEditor($task, $name)
+    {
+        /*$positions = [
+            'accountId' => '{accountId}', 'portfolio_id' => '{portfolio_id}', 'instrumentId' => '{instrumentId}',
+            'avgBuy' => '{avgBuy}', 'avgSell' => '{avgSell}', 'buyFillQty' => '{buyFillQty}',
+            'buyWorkingQty' => '{buyWorkingQty}', 'netPosition' => '{netPosition}',
+            'openAvgPrice' => '{openAvgPrice}', 'pnl' => '{pnl}', 'pnlPrice' => '{pnlPrice}',
+            'pnlPriceType' => '{pnlPriceType}', 'realizedPnl' => '{realizedPnl}',
+            'sellFillQty' => '{sellFillQty}', 'sellWorkingQty' => '{sellWorkingQty}',
+            'sodNetPos' => '{sodNetPos}', 'sodPriceType' => '{sodPriceType}',
+            'date' => '{date}', 'modified' => '{modified}', 'open' => '{open}',
+            'closed' => '{closed}', 'parent' => '{parent}', 'name' => '{name}',
+            'productSymbol' => '{productSymbol}', 'productId' => '{productId}',
+            'productName' => '{productName}', 'instru_modified' => '{instru_modified}',
+            'instrument_link' => '{instrument_link}', 'created' => '{created}',
+            'position_open' => '{position_open}', 'position_close' => '{position_close}'
+        ];*/
+        $positions = [
+            'avgBuy' => '{avgBuy}',
+            'avgSell' => '{avgSell}',
+            'netPosition' => '{netPosition}',
+            'productName' => '{productName}',
+            'instrument_link' => '{instrument_link}',
+            'position_open' => '{position_open}',
+            'position_close' => '{position_close}'
+        ];
+        $fieldName = $task . "_positions";
+        $fieldsetId = 'jform_params_' . $fieldName;
+        $textSelectAll = Text::_('PLG_VG_TRADING_TECH_SELECT_ALL_POSITION_ATTRS');
+
+        $html = "<fieldset name='$name' id='$fieldsetId' class='checkboxes'>";
+		$html .= "<button class='btn-attrs-all' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 1)'>$textSelectAll</button>";
+		$html .= "<legend class='visually-hidden'></legend>";
+
+        $i = 0;
+        $html .= "<div class='embed-positions'>";
+	    foreach ($positions as $colName => $shortCode)
+	    {
+		    $id    = $fieldsetId. '-' . $colName;
+		    $name  = "jform[params][" . $fieldName . "][]";
+			$class = 'form-check-input';
+
+            $html  .= '<div class="form-check form-check-inline">';
+			$html .= "<input type='checkbox' class='$class' id='$id' name='$name' value='$shortCode'/>";
+            $html .= "<label for='$id' class='form-check-label'>$colName</label>";
+            $html .= '</div>';
+			if (($i+1) % 5 == 0) {
+			    $html .= '<br>';
+			}
+            $i++;
+		}
+        $html .= "</div>";
+		$html .= '</fieldset>';
+        return $html;
+
     }
 
     /**
