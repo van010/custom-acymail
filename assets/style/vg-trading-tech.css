@@ -388,7 +388,19 @@
 	cursor: copy;
 }
 
-.vg-editor {
+.vg-editor, .embed-mail-subject {
 	display: flex;
 	gap: 15px;
+}
+
+.line-break {
+    border: none;
+    border-top: 2px solid #ccc;
+    margin: 20px 0;
+}
+
+.custom-line-break {
+    height: 2px;
+    background-color: #ccc;
+    margin: 20px 0;
 }
