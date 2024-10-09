@@ -34,8 +34,8 @@ class vgApiHandling {
 		}
 		showLoading();
 		const formData = new FormData();
-		formData.append('task', 'searchPosition');
-		formData.append('data', JSON.stringify(data));
+		formData.append('task', btoa('searchPosition'));
+		formData.append('data', btoa(JSON.stringify(data)));
 		try{
 		    const response = await fetch(this.joomlaApi, {
 				method: 'POST',
@@ -65,9 +65,9 @@ class vgApiHandling {
 		btnSendMail.classList.add('disabled-button');
 		const editorContent = getEditorBody().innerHTML ?? '';
 		const formData = new FormData();
-		formData.append('task', 'sendMail');
-		formData.append('mailBody', editorContent);
-		formData.append('mailId', currMailId);
+		formData.append('task', btoa('sendMail'));
+		formData.append('mailBody', btoa(editorContent));
+		formData.append('mailId', btoa(currMailId));
 		try{
 			const response = await fetch(this.joomlaApi, {
 				method: 'POST',
@@ -102,8 +102,8 @@ class vgApiHandling {
 		const closeMailId = fieldCloseMail.value;
 		const openMailId = fieldOpenMail.value;
 		const formData = new FormData();
-		formData.append('task', 'updateTtSignalMail');
-		formData.append('mailIds', JSON.stringify({closeMailId: closeMailId, openMailId: openMailId}));
+		formData.append('task', btoa('updateTtSignalMail'));
+		formData.append('mailIds', btoa(JSON.stringify({closeMailId: closeMailId, openMailId: openMailId})));
 		// formData.append('openMailId', openMailId);
 		try {
 			const response = await fetch(this.joomlaApi, {
@@ -127,14 +127,17 @@ class vgApiHandling {
 		// const mailTemplateContent = editorContent.querySelector('div#acym__wysid__template');
 		const mailEditorContent = editorContent.innerHTML;
 		acymMailContent = mailEditorContent;
+		var mailSubject = document.getElementById('mail-subject-content').value;
+		mailSubject = mailSubject.trim();
 		if (!acymMailContent || !currMailId) {
 			console.log('No content in editor or Mail Id. Cancel task: acym mail update!');
 			return ;
 		}
 		const formData = new FormData();
-		formData.append('mailId', currMailId);
-		formData.append('mailContent', acymMailContent);
-		formData.append('task', 'updateAcymMailContent');
+		formData.append('mailId', btoa(currMailId));
+		formData.append('mailContent', btoa(acymMailContent));
+		formData.append('mailSubject', btoa(mailSubject));
+		formData.append('task', btoa('updateAcymMailContent'));
 		try{
 		    const response = await fetch(this.joomlaApi, {
 				method: 'POST',
@@ -207,8 +210,8 @@ class vgApiHandling {
 		showLoading();
 		// load
 		const formData = new FormData();
-		formData.append('task', 'pagination');
-		formData.append('pageNum', pageNum);
+		formData.append('task', btoa('pagination'));
+		formData.append('pageNum', btoa(pageNum));
 		try {
 			const response = await fetch(this.joomlaApi, {
 				method: 'POST',

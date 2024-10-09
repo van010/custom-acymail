@@ -18,12 +18,13 @@ class vgComAcym
      * @param string $mailContent
      * @return mixed
      */
-    public static function updateAcymMailContent($res, $mailId, $mailContent)
+    public static function updateAcymMailContent($res, $mailId, $mailContent, $mailSubject)
     {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = [
-            '`body` = '. $db->quote($mailContent)
+            '`body` = ' . $db->quote($mailContent),
+            '`subject` = ' . $db->quote($mailSubject)
         ];
         $query->update('#__acym_mail')
             ->set($fields)
@@ -146,7 +147,7 @@ class vgComAcym
 	{
 		$db = Factory::getDbo();
 
-        $db->setQuery("select `id`, `name`, `body` from #__acym_mail where `type` = 'template'");
+        $db->setQuery("select `id`, `name`, `body`, `subject` from #__acym_mail where `type` = 'template'");
         $templates = $db->loadObjectList('id');
 
 		$db->setQuery("select template_id from #__tt_mail_template");
@@ -157,6 +158,7 @@ class vgComAcym
 
         $openMailContent = $templates[$openTemplateId]->body;
         $closeMailContent = $templates[$closeTemplateId]->body;
+        $openMailSubject = $templates[$openTemplateId]->subject;
 
 		$acymData = [
 			'acym_templates' => $templates,
@@ -164,6 +166,7 @@ class vgComAcym
             'tt_close_mail_id' => $closeTemplateId,
             'open_mail_content' => $openMailContent,
             'close_mail_content' => $closeMailContent,
+            'open_mail_subject' => $openMailSubject,
 		];
 
 		return $acymData;
@@ -181,7 +184,7 @@ class vgComAcym
         $openMailId = $allMails['tt_open_mail_id'];
 		$openText = Text::_('PLG_VG_TRADING_TECH_ACYM_SELECT_OPEN_MAIL');
 	    $htmlOpen = '<div class="trading-open-mail">';
-		$htmlOpen .= "<span>$openText</span>";
+		$htmlOpen .= "<h4>$openText</h4>";
         $htmlOpen .= "<select onchange='triggerUpdateTtSignalMail(this, value, $preview)' id='$id-open' name='$field_select_name-open' class='form-select required' data-id='$strOpenMailIds' required>";
         // $htmlOpen .= "<option value=''>Please Select Open Mail Templates</option>";
 	    foreach ($allMails['acym_templates'] as $acymTemplate)
@@ -200,14 +203,17 @@ class vgComAcym
         foreach ($allMails['acym_templates'] as $acymTemplate) {
             $openMailBody = $acymTemplate->body;
             $acymTemplateId = $acymTemplate->id;
+            $mailSubject = $acymTemplate->subject;
             $display = 'vg-show';
             if ($openMailId !== $acymTemplateId || $preview === 0) {
                 $display = 'vg-hide';
             }
             // $display = $openMailId !== $acymTemplateId ? 'vg-hide' : 'vg-show';
             $htmlOpen .= "<div class='$display' id='open-mail-$id-$acymTemplateId'>$openMailBody</div>";
+            $htmlOpen .= "<div class='vg-hide' id='mail-subject-$id-$acymTemplateId'>$mailSubject</div>";
         }
         $htmlOpen .= "</div>";
+        $htmlOpen .= "";
         /*if ($preview)
         {
 	        $htmlOpen .= "<div class='open-mail-preview'>";

@@ -50,7 +50,7 @@ class PlgSystemVg_trading_tech extends CMSPlugin
         }
 
         $input = $app->input;
-        $task = $input->get('task', '');
+        $task = base64_decode($input->get('task', ''));
 		$res = [
 			'message' => '',
 			'code' => 200,
@@ -58,25 +58,26 @@ class PlgSystemVg_trading_tech extends CMSPlugin
 		];
         switch ($task) {
             case 'pagination':
-                $pageNum = $input->getInt('pageNum', 0);
+                $pageNum = (int) base64_decode($input->getInt('pageNum', 0));
                 $res = vgComTradingTech::handlePagination($res, $pageNum);
                 break;
             case 'searchPosition':
-                $data = $input->get('data', '[]', 'RAW');
+                $data = base64_decode($input->get('data', '[]', 'RAW'));
                 $res = vgComTradingTech::searchPosition($res, json_decode($data));
                 break;
             case 'updateTtSignalMail':
-				$mailIds = $input->get('mailIds', [], 'RAW');
+				$mailIds = base64_decode($input->get('mailIds', [], 'RAW'));
                 $res = vgComAcym::updateTtSignalMail($res, json_decode($mailIds));
                 break;
             case 'updateAcymMailContent':
-                $mailId = $input->get('mailId', '');
-                $mailContent = $input->get('mailContent', '', 'RAW');
-                $res = vgComAcym::updateAcymMailContent($res, $mailId, $mailContent);
+                $mailId = (int) base64_decode($input->get('mailId', ''));
+                $mailContent = base64_decode($input->get('mailContent', '', 'RAW'));
+                $mailSubject = base64_decode($input->get('mailSubject', '', 'RAW'));
+                $res = vgComAcym::updateAcymMailContent($res, $mailId, $mailContent, $mailSubject);
                 break;
             case 'sendMail':
-                $mailBody = $input->get('mailBody', '', 'RAW');
-				$mailId = $input->get('mailId', 0);
+                $mailBody = base64_decode($input->get('mailBody', '', 'RAW'));
+				$mailId = base64_decode($input->get('mailId', 0));
                 $res = vgComAcym::sendMail($mailId, $mailBody);
                 break;
             case '':

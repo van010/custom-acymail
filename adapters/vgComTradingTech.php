@@ -113,7 +113,9 @@ class vgComTradingTech
 		$allColumns = array_merge($position_column_names, $instrument_column_names);*/
 
         $allColumns = [
-            'pos_avgBuy', 'pos_avgSell', 'pos_netPosition', 'instru_productName', 'instru_instrument_link'
+            'pos_avgBuy', 'pos_avgSell',
+            'pos_netPosition', 'instru_productSymbol',
+            'instru_productName', 'instru_instrument_link'
         ];
 
         $html = "<fieldset name='$name' id='$fieldsetId' class='checkboxes'>";
@@ -163,16 +165,21 @@ class vgComTradingTech
             'avgSell' => '{avgSell}',
             'netPosition' => '{netPosition}',
             'productName' => '{productName}',
+            'productSymbol' => '{productSymbol}',
             'instrument_link' => '{instrument_link}',
             'position_open' => '{position_open}',
-            'position_close' => '{position_close}'
+            'position_close' => '{position_close}',
         ];
         $fieldName = $task . "_positions";
         $fieldsetId = 'jform_params_' . $fieldName;
         $textSelectAll = Text::_('PLG_VG_TRADING_TECH_SELECT_ALL_POSITION_ATTRS');
 
         $html = "<fieldset name='$name' id='$fieldsetId' class='checkboxes'>";
-		$html .= "<button class='btn-attrs-all' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 1)'>$textSelectAll</button>";
+        if ($task === 'embed_subject') {
+            $html .= "<h4>$textSelectAll</h4>";
+        } else {
+            $html .= "<button class='btn-attrs-all' type='button' data-for='$fieldsetId' onclick='selectAllPositionAttrs(this, 1)'>$textSelectAll</button>";
+        }
 		$html .= "<legend class='visually-hidden'></legend>";
 
         $i = 0;
@@ -195,7 +202,18 @@ class vgComTradingTech
         $html .= "</div>";
 		$html .= '</fieldset>';
         return $html;
+    }
 
+    public static function areaSubject($subject)
+    {
+        $titleSubject = Text::_('PLG_VG_TRADING_TECH_MAIL_SUBJECT');
+        $html = "<div class='mail-subject'>";
+        $html .= "<h4>$titleSubject</h4>";
+        $html.= "<textarea id='mail-subject-content' rows='3' cols='76'>";
+        $html .= $subject;
+        $html.= "</textarea>";
+        $html .= "</div>";
+        return $html;
     }
 
     /**
@@ -307,7 +325,6 @@ class vgComTradingTech
         $neededData = $db->loadAssocList();
         // parse position open and close
         $neededData = self::parsePositionOpenClose($neededData);
-//		echo '<pre style="color: red">';print_r($neededData);echo '</pre>';die;
 
         // load all association data between #__tt_positions and #__tt_instruments
         $query->clear();

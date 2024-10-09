@@ -10,10 +10,9 @@ document.addEventListener('DOMContentLoaded', function (){
     if (inputMailId) {
         currMailId = inputMailId.value;
     }
-    setTimeout(function (){
-        getEditorBody().focus();
-    }, 1500);
+
     contentInsertShortcode('jform_params_embed_positions');
+    subjectInsertShortcode('jform_params_embed_subject_positions');
 });
 
 var $ = jQuery;
@@ -109,6 +108,45 @@ class vgUserBehaviors {
     }
 }
 
+function subjectInsertShortcode(elId) {
+    const fieldPositions = document.getElementById(elId);
+    if (!fieldPositions) return;
+    fieldPositions.querySelectorAll('input').forEach(function (el, idx) {
+        el.addEventListener('click', function () {
+            const subjectField = document.getElementById('mail-subject-content');
+
+            let newContent = '';
+            if (el.checked) {
+                newContent += el.value;
+                insertAtCursorPosition(subjectField, newContent);
+            } else {
+                subjectField.value = subjectField.value.replace(el.value, '');
+            }
+        });
+    });
+}
+
+function insertAtCursorPosition(field, textToInsert) {
+    // Check if the field is a valid input or textarea element
+    if (field && (field.tagName === "TEXTAREA" || field.tagName === "INPUT")) {
+        const startPos = field.selectionStart;
+        const endPos = field.selectionEnd;
+
+        // Get the existing value in the field and split it around the cursor position
+        const beforeCursor = field.value.substring(0, startPos);
+        const afterCursor = field.value.substring(endPos);
+
+        // Insert the new text at the cursor position and reassemble the value
+        field.value = beforeCursor + textToInsert + afterCursor;
+
+        // Move the cursor to the end of the inserted text
+        field.selectionStart = field.selectionEnd = startPos + textToInsert.length;
+
+        // Optionally, you can trigger the input event to inform other listeners
+        field.dispatchEvent(new Event('input'));
+    }
+}
+
 function contentInsertShortcode(elId) {
     const fieldPositions = document.getElementById(elId);
     if (!fieldPositions) return;
@@ -148,21 +186,28 @@ function selectAllPositionAttrs(element, task){
     function getAllInputValues(fieldset){
         const input = fieldset.querySelectorAll('input[type="checkbox"]');
         const values = [];
+        const subjects = [];
         input.forEach(function (el, idx){
             const shortCode = '<p>' + el.value + '</p>';
             values.push(shortCode);
+            subjects.push(el.value);
         });
-        return values;
+        return {'editor_values': values, 'subject_fields': subjects};
     }
 
     let contentShortcode = '';
     const editor = tinymce.get('acym_mail_preview_editor');
-    const positionValues = getAllInputValues(fieldPositions);
+    const values = getAllInputValues(fieldPositions);
+    const positionValues = values['editor_values'];
     contentShortcode = positionValues.join('\r\n');
 
     if (dataFor === 'jform_params_embed_positions' && task == 1) {
         editor.selection.setContent(contentShortcode);
         editor.undoManager.add();
+    } else if (dataFor === 'jform_params_embed_subject_positions' && task == 1) {
+        const subjectValues = values['subject_fields'];
+        const subjectField = document.getElementById('mail-subject-content');
+        subjectField.innerHTML = subjectValues.join('\r');
     }
 }
 
@@ -207,6 +252,7 @@ function triggerUpdateTtSignalMail(el, mailId, preview=true){
         }
     }
     loadMailContentIntoEditor(mailId);
+    loadMailSubjectIntoTextarea(mailId);
 }
 
 function changePosition(tagName, mapKeys, allDataMapKeys, insertPositionBy, element){
@@ -221,14 +267,18 @@ function changePosition(tagName, mapKeys, allDataMapKeys, insertPositionBy, elem
     let insertValues = new VgInsertValues();
     const htmlEditor = getEditorBody();
     const rawContent = htmlEditor.innerHTML;
+    const subjectMailContent = document.getElementById('mail-subject-content').value;
     const shortCode = textHandling.extractStrings(rawContent);
+    const subjectShortCode = textHandling.extractStrings(subjectMailContent);
     const data = {
-        'short_code': shortCode, // get array of appeared shortCode inside {} from JCE editor: ['netPosition', 'avgBuy', 'productName',...]
+        'content_short_code': shortCode, // get array of appeared shortCode inside {} from JCE editor: ['netPosition', 'avgBuy', 'productName',...]
+        'subject_short_code': subjectShortCode,
         'raw_content' : rawContent, // html string content from JCE editor
         'map_keys': mapKeys, // assoc data between tt_positions and tt_instruments filtered by option: Select Trading Attributes
                             // {accountId: {val: 123, key: 'Account Id'}, avgBuy: {val: 220, key: 'Average Buy'},...};
         'all_data_map_keys': allDataMapKeys, // all assoc data between tt_positions and tt_instruments
                             // {accountId: {val: 123, key: 'Account Id'}, avgBuy: {val: 220, key: 'Average Buy'},...};
+        'subject_mail_content': subjectMailContent
     };
 
     switch (insertPositionBy) {
@@ -239,10 +289,9 @@ function changePosition(tagName, mapKeys, allDataMapKeys, insertPositionBy, elem
             insertValues.insertMultipleByPointer(editor, 'text_selected', htmlData);
             break;
         case 'insert_one_by_shortcode_value':
-            insertValues.insertOneByShortCode(editor, data, insertPositionBy);
-            break;
         case 'insert_one_by_shortcode_key_value':
-            insertValues.insertOneByShortCode(editor, data, insertPositionBy);
+            insertValues.insertOneByShortCode(data, insertPositionBy);
+            insertValues.insertOneByShortCode(data, insertPositionBy, 'subject');
             break;
         case '':
         default:
@@ -288,6 +337,12 @@ function loadMailContentIntoEditor(mailId){
     if (currentMailPreview) {
         bodyContent.innerHTML = currentMailPreview.innerHTML;
     }
+}
+
+function loadMailSubjectIntoTextarea(mailId){
+    const subjectId = 'mail-subject-jform_params_acym_temps_preview-' + mailId;
+    const subjectContent = document.getElementById('mail-subject-content');
+    subjectContent.innerHTML = document.getElementById(subjectId).innerHTML;
 }
 
 function getEditorBody(){

@@ -24,12 +24,11 @@ class VgInsertValues {
 		editor.undoManager.add();
 	}
 
-	insertOneByShortCode(editor, data, task) {
-		const shortCode = data.short_code;
+	insertOneByShortCode(data, task, embed='content') {
+		const shortCode = embed === 'content' ? data.content_short_code : data.subject_short_code;
 
-		// if (shortCode.length === 0 || insertedShortCode) {
 		if (shortCode.length === 0) {
-			alert('Reload to insert again!');
+			console.log(`Reload to insert again! task: ${task} - shortcode: ${shortCode} - embed: ${embed}`);
 			return;
 		}
 
@@ -78,10 +77,12 @@ class VgInsertValues {
 		}
 		let textHandling = new vgTextHandling();
 		// const newContent = textHandling.replaceMultiple(rawShortCode, shortCodeData);
-		const newContent = textHandling.replacePlaceholders(rawContent, shortCodeData);
-		if (!bodyEditor) return;
-		// bodyEditor.innerHTML = content;
-		bodyEditor.innerHTML = newContent;
-		// insertedShortCode = true;
+		if (embed === 'content') {
+		    const newContent = textHandling.replacePlaceholders(rawContent, shortCodeData);
+			bodyEditor.innerHTML = newContent;
+		} else if (embed === 'subject') {
+			const newSubjectContent = textHandling.replacePlaceholders(data['subject_mail_content'], shortCodeData);
+			document.getElementById('mail-subject-content').value = newSubjectContent;
+		}
 	}
 }

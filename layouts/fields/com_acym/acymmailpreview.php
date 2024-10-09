@@ -21,7 +21,7 @@ class JFormFieldAcymMailPreview extends FormField
 		$content = $allMails['open_mail_content'];
         $btnSendmailText = Text::_('PLG_VG_TRADING_TECH_BTN_SEND_MAIL');
         $btnUpdateText = Text::_('PLG_VG_TRADING_TECH_BTN_UPDATE_ACYM_MAIL_CONTENT');
-		$html = 'Load acym templates';
+		$html = '<hr class="line-break">';
 		$html .= "<div class='select-acym-templates'>";
 		$html .= vgComAcym::tradingOpenMail($allMails, 'jform_params_acym_temps_preview', 'jform[params][acym_temps_preview]', 0);
         $html .= "<button id='vg-send-mail' type='button' onclick='new vgApiHandling().sendMailToUsers()'>$btnSendmailText</button>";
@@ -31,6 +31,16 @@ class JFormFieldAcymMailPreview extends FormField
         $html .= "<button id='update-acym-mail-content' type='button' class='btn btn-primary mb-2' onclick='new vgApiHandling().updateAcymMailContent()'>$btnUpdateText</button>";
         $html .= "<p class='update-acym-mail-msg'></p>";
         $html .= "</div>";
+
+        $html .= '<hr class="custom-line-break">';
+        $html .= "<div class='embed-mail-subject'>";
+        $html .= vgComTradingTech::areaSubject($allMails['open_mail_subject']);
+        $html .= "<div class='subject-select-shortcode'>";
+        $html .= vgComTradingTech::embedTradingPositionsToEditor('embed_subject', $this->name);
+        $html .= "</div>";
+        $html .= "</div>";
+
+        $html .= '<hr class="custom-line-break">';
 		$html .= "<div class='vg-editor'>";
 		$html .= $editor->embedContentToEditor($this->name, $content);
         $html .= "<div class='content-select-shortcode'>";
