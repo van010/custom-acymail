@@ -342,7 +342,7 @@ function loadMailContentIntoEditor(mailId){
 function loadMailSubjectIntoTextarea(mailId){
     const subjectId = 'mail-subject-jform_params_acym_temps_preview-' + mailId;
     const subjectContent = document.getElementById('mail-subject-content');
-    subjectContent.innerHTML = document.getElementById(subjectId).innerHTML;
+    subjectContent.value = document.getElementById(subjectId).innerHTML;
 }
 
 function getEditorBody(){
