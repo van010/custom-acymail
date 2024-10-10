@@ -113,7 +113,7 @@ class vgComTradingTech
 		$allColumns = array_merge($position_column_names, $instrument_column_names);*/
 
         $allColumns = [
-            'pos_avgBuy', 'pos_avgSell',
+            'pos_avgBuy', 'pos_avgSell', 'pos_pnl',
             'pos_netPosition', 'instru_productSymbol',
             'instru_productName', 'instru_instrument_link'
         ];
@@ -165,6 +165,7 @@ class vgComTradingTech
             'avgSell' => '{avgSell}',
             'netPosition' => '{netPosition}',
             'productName' => '{productName}',
+            'pnl' => '{pnl}',
             'productSymbol' => '{productSymbol}',
             'instrument_link' => '{instrument_link}',
             'position_open' => '{position_open}',
@@ -420,8 +421,8 @@ class vgComTradingTech
         }
         if (!empty($data['position_open']) && !empty($data['position_close'])) return ;
         foreach ($data as $key => $tradeData) {
-            $sell = isset($tradeData['avgSell']) ? "Sell: " . $tradeData['avgSell'] : '';
-            $buy = isset($tradeData['avgBuy']) ? "Buy: " . $tradeData['avgBuy'] : '';
+            $sell = isset($tradeData['avgSell']) ? "Sell: " . round($tradeData['avgSell'], 4) : '';
+            $buy = isset($tradeData['avgBuy']) ? "Buy: " . round($tradeData['avgBuy'], 4) : '';
             $data[$key]['position_open'] = $sell;
             $data[$key]['position_close'] = $sell;
             if ($tradeData['netPosition'] > 0) {
@@ -429,6 +430,9 @@ class vgComTradingTech
             } else {
                 $data[$key]['position_close'] = $buy;
             }
+            $data[$key]['pnl'] = round($tradeData['pnl'], 4);
+            $data[$key]['avgBuy'] = round($tradeData['avgBuy'], 4);
+            $data[$key]['avgSell'] = round($tradeData['avgSell'], 4);
         }
 		return $data;
     }

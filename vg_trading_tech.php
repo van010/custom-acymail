@@ -58,7 +58,7 @@ class PlgSystemVg_trading_tech extends CMSPlugin
 		];
         switch ($task) {
             case 'pagination':
-                $pageNum = (int) base64_decode($input->getInt('pageNum', 0));
+                $pageNum = (int) base64_decode($input->get('pageNum', 0));
                 $res = vgComTradingTech::handlePagination($res, $pageNum);
                 break;
             case 'searchPosition':
